@@ -11,6 +11,16 @@
 
 > **Visual example:** This is the proposed Brightdesk Workspace experience. It is a design concept, not a screenshot of a finished application.
 
+## Live implementation in Brightdesk Suite
+
+The working version of this app is currently integrated into the [Brightdesk Office Suite](https://github.com/connormolloy12/Brightdesk-suite). Its app module and UI integration checks are maintained there; the shared runtime styling is in [the suite stylesheet](https://github.com/connormolloy12/Brightdesk-suite/blob/main/src/styles.css).
+
+- [Workspace service](https://github.com/connormolloy12/Brightdesk-suite/blob/main/src/workspace-service.js)
+- [Workspace editor](https://github.com/connormolloy12/Brightdesk-suite/blob/main/src/workspace-editor.js)
+- [Workspace UI integration tests](https://github.com/connormolloy12/Brightdesk-suite/blob/main/tests/workspace-ui-integration.test.js)
+
+**Standalone status:** this repository is still a design and documentation scaffold. The preview above describes the intended standalone workspace; it is not a screenshot of this repository running as a separate app. The visual experience is implemented in the suite until the standalone app source is published here.
+
 ## Shared Brightdesk design standard
 
 The planned product follows the [Brightdesk visual and interaction standard](https://github.com/connormolloy12/Brightdesk-suite/blob/main/docs/BRIGHTDESK_VISUAL_STANDARD.md) for branding, icon usage, layout, responsive behaviour and accessibility.
