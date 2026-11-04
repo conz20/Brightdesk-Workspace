@@ -11,15 +11,15 @@
 
 > **Visual example:** This is the proposed Brightdesk Workspace experience. It is a design concept, not a screenshot of a finished application.
 
-## Live implementation in Brightdesk Suite
+## Standalone implementation
 
-The working version of this app is currently integrated into the [Brightdesk Office Suite](https://github.com/connormolloy12/Brightdesk-suite). Its app module and UI integration checks are maintained there; the shared runtime styling is in [the suite stylesheet](https://github.com/connormolloy12/Brightdesk-suite/blob/main/src/styles.css).
+This repository contains the runnable standalone desktop application source for Brightdesk Workspace. The actual workspace is rendered by the app code, and the professional design layer is loaded at runtime from `src/design-system.css`. The preview artwork above remains a design concept, not a captured screenshot.
 
-- [Workspace service](https://github.com/connormolloy12/Brightdesk-suite/blob/main/src/workspace-service.js)
-- [Workspace editor](https://github.com/connormolloy12/Brightdesk-suite/blob/main/src/workspace-editor.js)
-- [Workspace UI integration tests](https://github.com/connormolloy12/Brightdesk-suite/blob/main/tests/workspace-ui-integration.test.js)
-
-**Standalone status:** this repository is still a design and documentation scaffold. The preview above describes the intended standalone workspace; it is not a screenshot of this repository running as a separate app. The visual experience is implemented in the suite until the standalone app source is published here.
+- [Desktop application shell](src/index.html)
+- [Product module](src/workspace-editor.js)
+- [Professional design system](src/design-system.css)
+- [UI integration tests](tests/workspace-ui-integration.test.js)
+- [Shared Brightdesk Suite](https://github.com/connormolloy12/Brightdesk-suite)
 
 ## Shared Brightdesk design standard
 
@@ -39,7 +39,7 @@ Brightdesk Workspace is planned as a local-first project home that connects page
 
 ## Implementation status
 
-**Repository scaffold only.** This repository contains product design assets and documentation, but no runnable application source, package manifest, automated app tests or desktop installer. Do not treat the concept preview as a working app.
+**Standalone source committed to main.** This repository now includes an Electron app shell, the app modules, the shared visual design layer, Rust engine integration, build scripts and automated UI tests. The preview artwork remains concept art rather than a screenshot of the running application.
 
 ## Design brief
 
