@@ -1,20 +1,22 @@
-# Brightdesk Pages contributor instructions
+# Brightdesk Workspace project instructions
 
 ## Runtime
-Use exactly Node.js **24.22.2 LTS**. Do not change the pinned runtime in package.json, .nvmrc, .node-version, .npmrc, the dev container or GitHub Actions without explicit project-owner approval.
+Use exactly Node.js **24.22.2 LTS**. Keep the version aligned across package.json, package-lock.json, .node-version, .nvmrc, .npmrc, the dev container and CI.
 
 ## Product identity
-The product in this repository is **Brightdesk Pages**. Use that exact name in customer-facing text, release titles and installer descriptions. Describe distribution only in terms of desktop installers.
+This repository builds **Brightdesk Workspace** only. Use this exact name in customer-facing text, desktop installer names, release titles and documentation. The product opens directly into its own workspace; product switching is disabled.
 
-Brightdesk is an independent product. Use original names, source code, interface design and artwork. Do not claim Microsoft affiliation or copy proprietary Microsoft code or assets.
+## Approved Brightdesk range
+The complete Brightdesk Office Suite contains exactly: Pages, Sheets, Decks, Notes, Database, Forms, Lists, Planner, To Do and Workspace. This repository is for Brightdesk Workspace; do not add another product here.
 
-## Related Brightdesk products
-The wider Brightdesk Office Suite contains exactly these approved products: Pages, Sheets, Decks, Notes, Database, Forms, Lists, Planner, To Do and Workspace.
+Outlook, OneDrive, Teams and all unapproved products are excluded.
 
-Do not add Outlook, OneDrive, Teams or any other unapproved product.
+## Engineering
+Keep Electron responsible for the interface and application lifecycle. Use the shared safe Rust Node-API 8 engine for bounded source processing and vector operations. Preserve the JavaScript fallback. Rust must not add network access, telemetry, credentials or remote data upload.
 
-## Distribution
-Prepare desktop installers for Windows, macOS and Linux. Keep installer names and release titles centred on Brightdesk Pages. Do not publish a GitHub Release unless the project owner explicitly selects the publish option.
+Keep product data local by default. Preserve existing tests and licence notices. Do not change customer version 0.1.0 without approval.
 
-## Release safety
-Do not claim an installer is ready until its platform build, legal files, checksum verification and release tests have passed.
+## Desktop distribution
+Build Windows, macOS and Linux desktop installers with the product-specific commands in package.json. Keep publishing disabled in ordinary build jobs. Never claim a platform is ready until its build, native engine, checksums and verification tests pass.
+
+Do not publish a GitHub Release without explicit owner approval.
