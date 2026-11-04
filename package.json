@@ -16,38 +16,38 @@
     "start": "electron .",
     "test": "node --test",
     "dist": "npm run native:build && npm run verify:licenses && electron-builder --publish never",
-    "dist:win": "npm run native:build && npm run verify:licenses && electron-builder --win nsis --x64 --publish never",
-    "dist:mac": "npm run native:build && npm run verify:licenses && electron-builder --mac dmg pkg zip --universal --publish never",
-    "dist:linux": "npm run native:build && npm run verify:licenses && electron-builder --linux AppImage deb --x64 --publish never",
+    "dist:win": "npm run native:build && npm run verify:licenses && node scripts/build-app.js loop win",
+    "dist:mac": "npm run native:build && npm run verify:licenses && node scripts/build-app.js loop mac",
+    "dist:linux": "npm run native:build && npm run verify:licenses && node scripts/build-app.js loop linux",
     "release": "npm run native:build && npm run verify:licenses && electron-builder --publish never",
     "verify:licenses": "node scripts/verify-licenses.js",
     "postinstall": "npm run verify:licenses",
     "release:preflight": "node scripts/release-preflight.js",
-    "release:verify:win": "node scripts/verify-release-artifacts.js win",
-    "release:verify:mac": "node scripts/verify-release-artifacts.js mac",
-    "release:verify:linux": "node scripts/verify-release-artifacts.js linux",
+    "release:verify:win": "npm run verify:desktop:win",
+    "release:verify:mac": "npm run verify:desktop:mac",
+    "release:verify:linux": "npm run verify:desktop:linux",
     "release:prepare": "node scripts/prepare-release-assets.js",
     "lock:prepare": "npm install --package-lock-only --ignore-scripts --no-audit --no-fund",
     "lock:verify": "node scripts/verify-lockfile.js",
     "setup:dev": "node scripts/setup/bootstrap-dev.js",
     "rea:inspect": "node scripts/brightdesk-rea.js inspect",
-    "dist:desktop:win": "npm run native:build && node scripts/build-app.js pages win",
-    "dist:desktop:mac": "npm run native:build && node scripts/build-app.js pages mac",
-    "dist:desktop:linux": "npm run native:build && node scripts/build-app.js pages linux",
-    "verify:desktop:win": "node scripts/verify-desktop-installers.js win release/apps pages",
-    "verify:desktop:mac": "node scripts/verify-desktop-installers.js mac release/apps pages",
-    "verify:desktop:linux": "node scripts/verify-desktop-installers.js linux release/apps pages",
+    "dist:desktop:win": "npm run dist:win",
+    "dist:desktop:mac": "npm run dist:mac",
+    "dist:desktop:linux": "npm run dist:linux",
+    "verify:desktop:win": "node scripts/verify-desktop-installers.js win release/apps loop",
+    "verify:desktop:mac": "node scripts/verify-desktop-installers.js mac release/apps loop",
+    "verify:desktop:linux": "node scripts/verify-desktop-installers.js linux release/apps loop",
     "rust:fmt": "cargo fmt --manifest-path rust/Cargo.toml --all",
     "rust:test": "cargo test --manifest-path rust/Cargo.toml --workspace",
     "rust:build": "cargo build --manifest-path rust/Cargo.toml --workspace --release",
-    "rust:check": "npm run rust:fmt && cargo clippy --manifest-path rust/Cargo.toml --workspace --all-targets -- -D warnings && npm run rust:test && npm run native:build",
+    "rust:check": "cargo fmt --manifest-path rust/Cargo.toml --all -- --check && cargo clippy --manifest-path rust/Cargo.toml --workspace --all-targets -- -D warnings && npm run rust:test && npm run native:build",
     "native:build": "node scripts/build-native.js",
-    "dist:app:win": "node scripts/build-app.js loop win",
-    "dist:app:mac": "node scripts/build-app.js loop mac",
-    "dist:app:linux": "node scripts/build-app.js loop linux",
-    "verify:app:win": "node scripts/verify-standalone-apps.js win release/apps loop",
-    "verify:app:mac": "node scripts/verify-standalone-apps.js mac release/apps loop",
-    "verify:app:linux": "node scripts/verify-standalone-apps.js linux release/apps loop"
+    "dist:app:win": "npm run dist:win",
+    "dist:app:mac": "npm run dist:mac",
+    "dist:app:linux": "npm run dist:linux",
+    "verify:app:win": "npm run verify:desktop:win",
+    "verify:app:mac": "npm run verify:desktop:mac",
+    "verify:app:linux": "npm run verify:desktop:linux"
   },
   "dependencies": {
     "docx": "9.15.1",
@@ -88,7 +88,7 @@
       "target": [
         "nsis"
       ],
-      "artifactName": "Brightdesk-Setup-${version}-${arch}.${ext}"
+      "artifactName": "Brightdesk-Workspace-Setup-${version}-${arch}.${ext}"
     },
     "nsis": {
       "oneClick": false,
@@ -104,7 +104,7 @@
         "zip"
       ],
       "category": "public.app-category.productivity",
-      "artifactName": "Brightdesk-${version}-${arch}.${ext}"
+      "artifactName": "Brightdesk-Workspace-${version}-${arch}.${ext}"
     },
     "dmg": {
       "sign": false
@@ -115,7 +115,7 @@
         "deb"
       ],
       "category": "Office",
-      "artifactName": "brightdesk-${version}-${arch}.${ext}"
+      "artifactName": "brightdesk-workspace-${version}-${arch}.${ext}"
     },
     "appImage": {
       "artifactName": "Brightdesk-${version}-${arch}.${ext}"
