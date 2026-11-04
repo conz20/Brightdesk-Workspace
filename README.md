@@ -36,3 +36,26 @@ See [docs/DESIGN_BRIEF.md](docs/DESIGN_BRIEF.md) for planned screens, navigation
 ## Related project
 
 [Brightdesk Office Suite](https://github.com/connormolloy12/Brightdesk-suite)
+
+## Professional workspace examples and acceptance
+
+Workspace should feel like a useful project home, not a second generic launcher. Its purpose is to bring related pages, notes, tasks and resources into one coherent project context.
+
+### Example workflow
+
+1. Create a project workspace with a clear name and description.
+2. Add a project note, a task/checklist and a resource link.
+3. Organise the material into a small number of meaningful sections.
+4. Open an item and return to the project without losing context.
+5. Reopen the workspace and verify its structure is retained.
+
+Use a clear project navigation hierarchy, a readable central work area and restrained contextual panels. Show relationships between project material without implying that separate applications are deeply connected unless that integration exists and is tested.
+
+Follow the shared [Brightdesk visual and interaction standard](https://github.com/connormolloy12/Brightdesk-suite/blob/main/docs/BRIGHTDESK_VISUAL_STANDARD.md).
+
+### Acceptance checks
+
+- Workspace navigation and project context remain consistent while moving between items.
+- Content blocks and linked resources have clear, accessible actions.
+- Persistence and cross-module integration are verified before being claimed.
+- Scaffold status is not confused with a runnable application.
