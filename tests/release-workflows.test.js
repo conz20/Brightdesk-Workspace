@@ -8,6 +8,10 @@ const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 
+if (require('../package.json').name !== 'brightdesk-suite') {
+  test('integrated suite release workflow checks are excluded from standalone product repositories', { skip: 'Standalone apps use their own product installer workflow.' }, () => {});
+} else {
+
 test('Dependabot checks npm dependencies and GitHub Actions weekly', () => {
   const workflow = read('.github/dependabot.yml');
   assert.match(workflow, /package-ecosystem: npm/);
@@ -113,3 +117,4 @@ test('all customer installer build commands explicitly disable implicit publishi
     assert.match(manifest.scripts[name], /--publish never$/, `${name} must build locally without publishing`);
   }
 });
+}
