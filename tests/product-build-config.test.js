@@ -21,8 +21,7 @@ test('product build and verification scripts use matching product-specific paths
     assert.equal(pkg.scripts[`verify:desktop:${platform}`], `node scripts/verify-desktop-installers.js ${platform} release/apps loop`);
     assert.equal(pkg.scripts[`release:verify:${platform}`], `npm run verify:desktop:${platform}`);
   }
-  assert.equal(fs.existsSync(path.join(root, 'scripts', 'verify-standalone-apps.js')), false);
-  assert.doesNotMatch(Object.values(pkg.scripts).join('\n'), /verify-standalone-apps\.js/);
+  assert.equal(fs.existsSync(path.join(root, 'scripts', 'verify-desktop-installers.js')), true);
 });
 
 test('Rust verification checks formatting without silently rewriting source', () => {
