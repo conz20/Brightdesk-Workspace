@@ -53,7 +53,6 @@ function socialPreview(app) {
     database: '#49b6c8', forms: '#bd83e8', lists: '#6aa8d8', planner: '#d98c50',
     todo: '#76b46c', loop: '#9a91e8'
   })[app.appId] || '#6f8ee8';
-  const mark = catalog.find(item => item.id === app.appId)?.icon || 'B';
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-labelledby="title desc">
   <title id="title">${escapeHtml(app.name)} — Brightdesk</title>
   <desc id="desc">Original Brightdesk repository banner for ${escapeHtml(app.name)}.</desc>
@@ -65,7 +64,11 @@ function socialPreview(app) {
   <circle cx="1150" cy="75" r="290" fill="${accent}" opacity=".13"/>
   <circle cx="860" cy="610" r="230" fill="${accent}" opacity=".11"/>
   <rect x="82" y="92" width="82" height="82" rx="24" fill="url(#accent)"/>
-  <text x="123" y="147" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#152039">${escapeHtml(mark)}</text>
+  <rect x="82" y="92" width="82" height="82" rx="24" fill="#101B35"/>
+  <path d="M101 111h19a8 8 0 0 1 8 8v19h-19a8 8 0 0 1-8-8z" fill="url(#accent)"/>
+  <path d="M132 111h8a8 8 0 0 1 8 8v8h-16z" fill="#8C7CF0"/>
+  <path d="M132 140h16v8a8 8 0 0 1-8 8h-8z" fill="#43B9A7"/>
+  <path d="M101 140h19v16h-11a8 8 0 0 1-8-8z" fill="#4B8DE8"/>
   <text x="190" y="145" font-family="Arial, sans-serif" font-size="24" letter-spacing="5" font-weight="700" fill="#d9e2f4">BRIGHTDESK</text>
   <text x="86" y="318" font-family="Arial, sans-serif" font-size="72" font-weight="700" fill="#ffffff">${escapeHtml(app.name)}</text>
   <text x="90" y="390" font-family="Arial, sans-serif" font-size="27" fill="#d7e0f2">${escapeHtml(app.description)}</text>
