@@ -1,10 +1,13 @@
-# Brightdesk Pages project notes
+# Brightdesk Workspace project notes
 
-Use exactly Node.js 24.22.2 LTS for development, testing and desktop installer builds.
+## Runtime
+Use exactly Node.js **24.22.2 LTS** for development, testing and desktop installer builds. Keep the runtime aligned across package.json, package-lock.json, .node-version, .nvmrc, .npmrc, the development container and CI.
 
-The product in this repository is called **Brightdesk Pages**. Use that name on its own in customer-facing text, repository descriptions, installer names and release titles. Describe its distribution in terms of desktop installers.
+## Product identity
+This repository builds **Brightdesk Workspace** only. Use this exact name in customer-facing text, desktop installer names, release titles and documentation. The product opens directly into its own workspace; product switching is disabled.
 
-Brightdesk Pages is part of Brightdesk Office Suite. The approved Brightdesk product range is:
+## Approved Brightdesk range
+The complete Brightdesk Office Suite contains exactly:
 - Brightdesk Pages
 - Brightdesk Sheets
 - Brightdesk Decks
@@ -16,17 +19,21 @@ Brightdesk Pages is part of Brightdesk Office Suite. The approved Brightdesk pro
 - Brightdesk To Do
 - Brightdesk Workspace
 
-Outlook, OneDrive and Teams are excluded. Do not add them.
+Outlook, OneDrive, Teams and all unapproved products are excluded.
 
-Brightdesk is an independent desktop product with original branding and implementation. Keep installers native to their target operating systems. Do not publish a release without explicit owner approval.
+## Engineering and data
+Keep Electron responsible for the desktop interface and product lifecycle. Use the shared Rust Node-API engine for bounded local processing. Preserve the JavaScript fallback. Rust must not add network access, telemetry, credentials or remote data upload.
 
+Keep product data local by default. Preserve existing tests and licence notices. Do not change customer version **0.1.0** without approval.
 
-## Naming rule for all future desktop installer work
+## Desktop distribution
+Prepare native Windows, macOS and Linux desktop installers using the product-specific build and verification commands. Keep publishing disabled in ordinary build jobs. Do not claim a platform is ready until its build, native engine, checksums and verification tests pass.
 
-For every Brightdesk product and every future desktop installer repository, use the product name on its own (for example, **Brightdesk Pages**) and describe the deliverables as **desktop installers**.
+Do not publish a GitHub Release without explicit owner approval.
 
-Do not use the words "standalone" or "app" in customer-facing wording, product descriptions, repository names or descriptions, README files, documentation, UI labels, download buttons, installer names, release names, workflow names, artwork, or progress updates. When either word appears in those contexts, replace it with clear product-name or desktop-installer wording. Apply this rule consistently to all ten approved Brightdesk products, not just Pages.
+## Customer-facing naming
+Use the product name on its own and describe distribution as **desktop installers**. Do not use the words "standalone" or "app" in customer-facing wording, product descriptions, README files, documentation, interface labels, download buttons, installer names, release names, workflow names, artwork or progress updates.
 
-When touching code or internal files, also rename avoidable filenames, function names, variables, comments, test names, and workflow identifiers that use the disallowed terminology. Preserve only framework-required technical API identifiers or compatibility keys where changing them would break the desktop runtime or existing data; never expose those unavoidable identifiers as product wording.
+When touching internal files, also replace avoidable filenames, function names, variables, comments, test names and workflow identifiers that use those terms. Preserve only framework-required technical identifiers or compatibility keys when changing them would break the desktop runtime or existing data. Never expose unavoidable identifiers as product wording.
 
-The user has explicitly authorised using available plugins and tools as needed to carry out Brightdesk project work. This does not authorise adding products outside the approved ten or publishing releases without explicit release approval.
+The user has authorised using available plugins and tools for Brightdesk project work. This does not authorise adding products outside the approved ten or publishing releases without explicit release approval.
