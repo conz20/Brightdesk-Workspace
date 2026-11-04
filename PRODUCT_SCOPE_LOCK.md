@@ -19,19 +19,9 @@ The first-release product lineup is all ten names listed above. The product cata
 
 ## Version 0.1.0 implementation status
 
-Implemented and available:
-- Brightdesk Pages
-- Brightdesk Sheets
-- Brightdesk Decks
-- Brightdesk Notes
+This repository is the product-specific source repository for **Brightdesk Workspace**. Its desktop source, product modules, shared visual system, Rust integration, build configuration and automated interface-test definitions are committed to `main`.
 
-Planned, not yet implemented:
-- Brightdesk Database
-- Brightdesk Forms
-- Brightdesk Lists
-- Brightdesk Planner
-- Brightdesk To Do
-- Brightdesk Workspace
+Source presence is not a release-readiness claim. Functional acceptance tests, Rust formatting and linting, Rust tests, native engine builds, Windows/macOS/Linux desktop installer builds, checksum checks and post-install smoke tests must pass before any platform can be described as ready. This file does not authorise a GitHub Release.
 
 ## Explicit exclusions
 
