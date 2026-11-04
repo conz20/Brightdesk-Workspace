@@ -13,7 +13,7 @@
 
 ## Standalone implementation
 
-This repository now includes the runnable standalone desktop application source, with its own product identity and startup configuration. The working workspace is implemented in the application code below. The preview artwork above remains a design concept, not a captured screenshot.
+This repository contains the runnable standalone desktop application source, with its own product identity and startup configuration. The actual workspace is rendered by the application code. The preview artwork above remains a design concept, not a captured screenshot.
 
 - [Desktop application shell](src/index.html)
 - [Product module](src/workspace-editor.js)
