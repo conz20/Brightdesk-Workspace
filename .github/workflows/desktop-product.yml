@@ -1,0 +1,68 @@
+name: Build Brightdesk Workspace desktop installers
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      publish_release:
+        description: Publish a GitHub Release after all desktop installers pass verification
+        type: boolean
+        required: true
+        default: false
+      release_tag:
+        description: Release tag
+        type: string
+        required: true
+        default: v0.1.0
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  test:
+    name: Test Brightdesk Workspace
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24.22.2
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: node --test tests/rust-engine.test.mjs tests/embedding-bridge.test.js
+
+  build:
+    name: Build ${{ matrix.platform }} installer
+    if: github.event_name == 'workflow_dispatch'
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: win
+            runner: windows-latest
+          - platform: mac
+            runner: macos-latest
+          - platform: linux
+            runner: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24.22.2
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run dist:app:${{ matrix.platform }}
+      - run: npm run verify:app:${{ matrix.platform }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: Brightdesk-Workspace-${{ matrix.platform }}
+          path: release/apps/loop/**
+          if-no-files-found: error
+          retention-days: 14
+

@@ -1,0 +1,3 @@
+# Generated native module and Rust build output
+/native/*.node
+/rust/target/
