@@ -2,9 +2,9 @@
 
 ## Why this runs from Brightdesk Pages
 
-GitHub-hosted jobs in the private Brightdesk repositories have repeatedly failed before their first step starts. Brightdesk Pages is public and its standard hosted runner jobs have succeeded.
+GitHub-hosted jobs in the private Brightdesk repositories have repeatedly failed before their first step starts. This controller centralises the checks and keeps source access scoped to short-lived, repository-specific read-only tokens.
 
-This controller runs from the public Brightdesk Pages repository and checks out all ten private Brightdesk source repositories onto a temporary GitHub-hosted runner. It does not copy private source files into Brightdesk Pages, publish them as artifacts, or print raw test/build logs.
+This controller runs from the Brightdesk Pages repository and checks out all ten private Brightdesk source repositories onto a temporary GitHub-hosted runner. It does not copy private source files into Brightdesk Pages, publish them as artifacts, or print raw test/build logs.
 
 ## Private repository access (one-time setup)
 
