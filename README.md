@@ -5,7 +5,9 @@
 
 <p align="center"><strong>Bring project notes, tasks and resources together.</strong></p>
 
-<p align="center"><img src="assets/previews/workspace.svg" width="100%" alt="Brightdesk Workspace design preview"></p>
+<p align="center"><a href="https://raw.githubusercontent.com/connormolloy12/Brightdesk-Workspace/main/assets/previews/workspace.svg"><img src="assets/previews/workspace.svg" width="100%" alt="Brightdesk Workspace design preview"></a></p>
+
+<p align="center"><sub>Select the preview to open the full-size artwork.</sub></p>
 
 > **Visual example:** This is the proposed Brightdesk Workspace experience. It is a design concept, not a screenshot of a finished application.
 
