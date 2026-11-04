@@ -9,6 +9,10 @@
 
 > **Visual example:** This is the proposed Brightdesk Workspace experience. It is a design concept, not a screenshot of a finished application.
 
+## Shared Brightdesk design standard
+
+The planned product follows the [Brightdesk visual and interaction standard](https://github.com/connormolloy12/Brightdesk-suite/blob/main/docs/BRIGHTDESK_VISUAL_STANDARD.md) for branding, icon usage, layout, responsive behaviour and accessibility.
+
 ## Product experience
 
 Brightdesk Workspace is planned as a local-first project home that connects pages, notes, checklists and resources in one organised place.
