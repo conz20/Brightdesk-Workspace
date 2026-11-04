@@ -118,7 +118,7 @@
       "artifactName": "brightdesk-workspace-${version}-${arch}.${ext}"
     },
     "appImage": {
-      "artifactName": "Brightdesk-${version}-${arch}.${ext}"
+      "artifactName": "brightdesk-workspace-${version}-${arch}.${ext}"
     },
     "pkg": {
       "license": "TERMS_AND_CONDITIONS.txt",
