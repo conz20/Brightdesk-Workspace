@@ -11,25 +11,25 @@
 
 > **Visual example:** This is the proposed Brightdesk Workspace experience. It is a design concept, not a screenshot of a finished application.
 
-## Standalone implementation
+## Live implementation in Brightdesk Suite
 
-This repository contains the runnable standalone desktop application source, with its own product identity and startup configuration. The actual workspace is rendered by the application code. The preview artwork above remains a design concept, not a captured screenshot.
+The working version of this app is currently integrated into the [Brightdesk Office Suite](https://github.com/connormolloy12/Brightdesk-suite). Its app module and UI integration checks are maintained there; the shared runtime styling is in [the suite stylesheet](https://github.com/connormolloy12/Brightdesk-suite/blob/main/src/styles.css).
 
-- [Desktop application shell](src/index.html)
-- [Product module](src/workspace-editor.js)
-- [Professional design system](src/design-system.css)
-- [UI integration tests](tests/workspace-ui-integration.test.js)
-- [Shared Brightdesk Suite](https://github.com/connormolloy12/Brightdesk-suite)
+- [Workspace service](https://github.com/connormolloy12/Brightdesk-suite/blob/main/src/workspace-service.js)
+- [Workspace editor](https://github.com/connormolloy12/Brightdesk-suite/blob/main/src/workspace-editor.js)
+- [Workspace UI integration tests](https://github.com/connormolloy12/Brightdesk-suite/blob/main/tests/workspace-ui-integration.test.js)
+
+**Standalone status:** this repository is still a design and documentation scaffold. The preview above describes the intended standalone workspace; it is not a screenshot of this repository running as a separate app. The visual experience is implemented in the suite until the standalone app source is published here.
 
 ## Shared Brightdesk design standard
 
-This product follows the [Brightdesk visual and interaction standard](https://github.com/connormolloy12/Brightdesk-suite/blob/main/docs/BRIGHTDESK_VISUAL_STANDARD.md) for branding, icon usage, layout, responsive behaviour and accessibility.
+The planned product follows the [Brightdesk visual and interaction standard](https://github.com/connormolloy12/Brightdesk-suite/blob/main/docs/BRIGHTDESK_VISUAL_STANDARD.md) for branding, icon usage, layout, responsive behaviour and accessibility.
 
 ## Product experience
 
-Brightdesk Workspace is a local-first project home that connects pages, notes, checklists and resources in one organised place.
+Brightdesk Workspace is planned as a local-first project home that connects pages, notes, checklists and resources in one organised place.
 
-## Product capabilities
+## Planned capabilities
 
 - Create workspaces, pages and project areas.
 - Add and organise content blocks.
@@ -39,7 +39,7 @@ Brightdesk Workspace is a local-first project home that connects pages, notes, c
 
 ## Implementation status
 
-**Standalone source included.** This repository contains the desktop application, app modules, shared Rust engine integration, package configuration and automated UI tests. The README preview remains concept artwork; the actual interface is rendered by the application source.
+**Repository scaffold only.** This repository contains product design assets and documentation, but no runnable application source, package manifest, automated app tests or desktop installer. Do not treat the concept preview as a working app.
 
 ## Design brief
 
