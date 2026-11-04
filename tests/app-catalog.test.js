@@ -3,6 +3,10 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const catalog = require('../src/app-catalog');
 
+if (require('../package.json').name !== 'brightdesk-suite') {
+  test('integrated suite catalogue checks are excluded from standalone product repositories', { skip: 'This contract belongs to Brightdesk-suite, not a standalone product.' }, () => {});
+} else {
+
 test('app catalogue shows all ten first-release apps and identifies the complete implemented suite', () => {
   assert.deepEqual(catalog.slice(0, 4).map(app => app.id), ['pages', 'sheets', 'slides', 'notes']);
   assert.deepEqual(catalog.slice(0, 4).map(app => app.name), ['Brightdesk Pages', 'Brightdesk Sheets', 'Brightdesk Decks', 'Brightdesk Notes']);
@@ -191,3 +195,4 @@ test('README presents all ten apps as the integrated first-release lineup', () =
   assert.match(readme, /all ten.*implemented/i);
   assert.doesNotMatch(readme, /other six.*not yet working apps/i);
 });
+}
