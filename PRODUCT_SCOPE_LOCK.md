@@ -1,6 +1,6 @@
-# Brightdesk product scope
+# Brightdesk product scope — Brightdesk Workspace
 
-The approved Brightdesk product range contains exactly these ten named products:
+The approved Brightdesk Office Suite contains exactly ten products:
 
 1. Brightdesk Pages
 2. Brightdesk Sheets
@@ -13,34 +13,22 @@ The approved Brightdesk product range contains exactly these ten named products:
 9. Brightdesk To Do
 10. Brightdesk Workspace
 
-## First-release lineup
+## Repository boundary
 
-The first-release product lineup is all ten names listed above. The product catalogue must show each name, original Brightdesk artwork, a short explanation and an accurate availability status.
+This repository builds **Brightdesk Workspace** only. It opens directly into its own workspace and does not expose product switching. The other approved products belong to their own product repositories and the integrated Brightdesk-suite repository.
 
-## Version 0.1.0 implementation status
+## First-release version
 
-Implemented and available:
-- Brightdesk Pages
-- Brightdesk Sheets
-- Brightdesk Decks
-- Brightdesk Notes
-
-Planned, not yet implemented:
-- Brightdesk Database
-- Brightdesk Forms
-- Brightdesk Lists
-- Brightdesk Planner
-- Brightdesk To Do
-- Brightdesk Workspace
+The current customer-facing version line is **0.1.0**. Describe availability accurately. A source repository or successful compile is not proof that a signed installer, upgrade or release is ready.
 
 ## Explicit exclusions
 
-Outlook, OneDrive and Teams are not part of Brightdesk and must not be added.
+Outlook, OneDrive, Teams and any other unapproved product are not part of Brightdesk.
 
 ## Change control
 
-This scope can change only when the user explicitly instructs. Do not infer approval to add products from a technical dependency, design reference or workflow comparison.
+This scope changes only when the project owner explicitly instructs. Do not infer approval to add products from a technical dependency, design reference or workflow comparison.
 
 ## Identity
 
-Brightdesk is independent and is not affiliated with Microsoft. Use original code, product names, interface design and assets. Microsoft product names may be used only as internal comparisons to explain familiar workflows.
+Brightdesk is an independent project and is not affiliated with Microsoft. Use original code, product names, interface design and artwork.
