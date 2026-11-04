@@ -1,58 +1,50 @@
 # Brightdesk Workspace
 
-![Brightdesk Workspace repository banner](assets/social-preview.svg)
+<p align="center"><img src="assets/branding/mark.svg" width="82" height="82" alt="Brightdesk brand mark"><br><strong>brightdesk</strong></p>
+<p align="center"><img src="assets/branding/icons/workspace.svg" width="112" height="112" alt="Brightdesk Workspace application icon"></p>
 
-![Brightdesk Workspace product artwork](assets/brightdesk-product.svg)
+<p align="center"><strong>Bring project notes, tasks and resources together.</strong></p>
 
-Combine notes, lists, tasks and project material in one local workspace.
+<p align="center"><a href="https://raw.githubusercontent.com/connormolloy12/Brightdesk-Workspace/main/assets/previews/workspace.svg"><img src="assets/previews/workspace.svg" width="100%" alt="Brightdesk Workspace design preview"></a></p>
 
-Brightdesk is an independent desktop product. This repository is the desktop edition of **Brightdesk Workspace**. It uses the shared Brightdesk desktop engine and opens directly into this product, with product switching disabled.
+<p align="center"><sub>Select the preview to open the full-size artwork.</sub></p>
 
-## What this product does
+> **Visual example:** This is the proposed Brightdesk Workspace experience. It is a design concept, not a screenshot of a finished application.
 
-Combine notes, lists, tasks and project material in one local workspace.
+## Standalone implementation
 
-## Download
+This repository now includes the runnable standalone desktop application source, with its own product identity and startup configuration. The working workspace is implemented in the application code below. The preview artwork above remains a design concept, not a captured screenshot.
 
-The latest desktop installers are published from this repository's verified release workflow when a release is approved.
+- [Desktop application shell](src/index.html)
+- [Product module](src/workspace-editor.js)
+- [Professional design system](src/design-system.css)
+- [UI integration tests](tests/workspace-ui-integration.test.js)
+- [Shared Brightdesk Suite](https://github.com/connormolloy12/Brightdesk-suite)
 
-| Platform | Installer |
-| --- | --- |
-| Windows | Windows x64 installer (.exe) |
-| macOS | Universal installer (.dmg), package (.pkg) and archive (.zip) |
-| Linux | x64 AppImage and Debian package (.deb) |
+## Shared Brightdesk design standard
 
-The complete ten-product desktop suite remains available from [Brightdesk-suite](https://github.com/connormolloy12/Brightdesk-suite).
+This product follows the [Brightdesk visual and interaction standard](https://github.com/connormolloy12/Brightdesk-suite/blob/main/docs/BRIGHTDESK_VISUAL_STANDARD.md) for branding, icon usage, layout, responsive behaviour and accessibility.
 
-## Run from source
+## Product experience
 
-Use Node.js **24.22.2**.
+Brightdesk Workspace is a local-first project home that connects pages, notes, checklists and resources in one organised place.
 
-```sh
-npm ci
-npm start
-```
+## Product capabilities
 
-To build an installer on its native operating system:
+- Create workspaces, pages and project areas.
+- Add and organise content blocks.
+- Connect notes, tasks and resources within a project.
+- Show useful project context and recent activity.
+- Keep project information on this device.
 
-```sh
-npm run dist:product:mac
-npm run verify:product:mac
-```
+## Implementation status
 
-Use `win` on Windows or `linux` on Linux instead of `mac`.
+**Standalone source included.** This repository contains the desktop application, app modules, shared Rust engine integration, package configuration and automated UI tests. The README preview remains concept artwork; the actual interface is rendered by the application source.
 
-## Project structure
+## Design brief
 
-- `src/` — Brightdesk desktop renderer and product modules.
-- `assets/brightdesk-product.svg` — original preview artwork for this product.
-- `scripts/` — build and release verification tools.
-- `tests/` — automated product and shared-engine tests.
+See [docs/DESIGN_BRIEF.md](docs/DESIGN_BRIEF.md) for planned screens, navigation and acceptance targets.
 
 ## Related project
 
-[Brightdesk Office Suite](https://github.com/connormolloy12/Brightdesk-suite) brings all ten approved Brightdesk products together in one desktop installer.
-
-## Identity and licence
-
-Brightdesk is independent and is not affiliated with Microsoft. It uses original product names, code, interface design and artwork. See [LICENSE](LICENSE), [TERMS_AND_CONDITIONS.txt](TERMS_AND_CONDITIONS.txt), and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+[Brightdesk Office Suite](https://github.com/connormolloy12/Brightdesk-suite)
