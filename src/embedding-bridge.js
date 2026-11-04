@@ -1,0 +1,5 @@
+'use strict';
+const engine=require('./rust-engine');
+function array(v){if(!Array.isArray(v)&&!ArrayBuffer.isView(v))throw new TypeError('Embedding providers must return an array or typed array.');return Array.from(v,Number);}
+function createEmbeddingBridge(provider){if(!provider||typeof provider.embed!=='function')throw new TypeError('An embedding provider with async embed(text) is required.');return Object.freeze({async embed(text){if(typeof text!=='string')throw new TypeError('Embedding input must be text.');return engine.normalizeEmbedding(array(await provider.embed(text)));},async rank(query,candidates,limit){if(typeof query!=='string'||!Array.isArray(candidates)||candidates.some(x=>typeof x!=='string'))throw new TypeError('Ranking requires a text query and text candidates.');const [q,...v]=await Promise.all([provider.embed(query),...candidates.map(x=>provider.embed(x))]);return engine.rankEmbeddings(engine.normalizeEmbedding(array(q)),v.map(array),limit);}});}
+module.exports={createEmbeddingBridge};

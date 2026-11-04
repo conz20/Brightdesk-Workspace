@@ -1,0 +1,222 @@
+
+/* Brightdesk Office UI — original Fluent-inspired design language.
+   Built from Brightdesk-owned components and artwork; no third-party screenshots or assets. */
+:root{
+  --bd-accent:#315fce;--bd-accent-strong:#234aa8;--bd-accent-soft:#eaf0ff;
+  --bd-ink:#202b3c;--bd-text:#354256;--bd-muted:#68778c;--bd-subtle:#8a96a8;
+  --bd-canvas:#f3f5f8;--bd-surface:#fff;--bd-surface-alt:#f8f9fb;
+  --bd-line:#dfe4ec;--bd-line-soft:#ebeff4;--bd-positive:#16845b;
+  --bd-shadow:0 8px 24px rgba(29,45,72,.07);
+  color:var(--bd-ink);background:var(--bd-canvas);
+}
+body{background:var(--bd-canvas);color:var(--bd-ink);font-size:13px}
+button,input,select,textarea{font-family:inherit}
+button{transition:background-color .14s ease,border-color .14s ease,color .14s ease,box-shadow .14s ease}
+.sidebar{background:#fff;border-right:1px solid var(--bd-line);box-shadow:1px 0 0 rgba(28,43,66,.015)}
+.brand{padding-bottom:27px}
+.brand-mark{background:linear-gradient(145deg,#416fe0,#244da9);border-radius:10px;box-shadow:0 4px 10px rgba(49,95,206,.2)}
+.brand b{color:#1f2c40;font-size:18px;letter-spacing:-.45px}
+.section-label{color:#7d899a;font-size:9px;letter-spacing:1.15px}
+.nav{color:#435168;border-radius:7px;margin:2px 0;padding:9px 10px}
+.nav b{font-size:12px;font-weight:620}
+.nav small{color:#7d899a;font-size:10px}
+.nav:hover{background:#f4f6fa;color:#243b61}
+.nav.active{background:var(--bd-accent-soft);color:var(--bd-accent-strong);box-shadow:inset 3px 0 0 var(--bd-accent)}
+.nav.active small{color:#526c9c}
+.app-icon{border-radius:8px;font-size:14px}
+.pages{background:#e9efff;color:#315fce}
+.sheets{background:#e5f4ed;color:#16845b}
+.slides{background:#fff0e8;color:#c45b2c}
+.notes{background:#eaf3fb;color:#397cae}
+.database{background:#f0eafe;color:#7552b5}
+.forms{background:#fceafa;color:#a34c91}
+.lists{background:#e8f3f5;color:#287f8c}
+.planner{background:#fff3df;color:#a66a1f}
+.todo{background:#e8f4eb;color:#27834f}
+.loop{background:#e9effb;color:#4b68a8}
+.sidebar-divider{background:var(--bd-line-soft)}
+.manager-icon{background:#f1f4f8;color:#53647a}
+.free-pill{background:#eef4ff;color:#315fce}
+.main{background:var(--bd-canvas);padding-top:23px}
+.topbar{border-bottom:1px solid var(--bd-line);padding-bottom:13px}
+.topbar h1{color:#1f2c40;font-size:23px;font-weight:650}
+.eyebrow{color:#7d899a;font-size:9px;letter-spacing:1.25px}
+.save-status{color:#68778c}
+.primary{background:var(--bd-accent);color:white;border:1px solid var(--bd-accent)}
+.primary:hover{background:var(--bd-accent-strong);border-color:var(--bd-accent-strong)}
+.secondary{background:#fff;border:1px solid #d5dce7;color:#34445a}
+.secondary:hover{background:#f7f9fc;border-color:#aebbd0;color:#233b61}
+.welcome{background:linear-gradient(105deg,#eaf0ff 0%,#f3f6ff 56%,#edf6f8 100%);border:1px solid #e0e8f5;box-shadow:0 2px 8px rgba(34,59,102,.025)}
+.welcome h2{color:#20324e;font-weight:650}
+.welcome p{color:#64748a}
+.welcome-orb{color:#557bd0;opacity:.45}
+.workspace{border:1px solid #dbe2ec;border-radius:9px;background:#fff;box-shadow:var(--bd-shadow)}
+.document-bar{background:#fff;border-bottom:1px solid var(--bd-line-soft)}
+.document-bar input{color:#26364d}
+.local-tag{color:var(--bd-positive)}
+.ribbon-tabs{background:#fff;border-bottom:1px solid var(--bd-line)}
+.ribbon-tab{color:#536177;font-size:11px;padding:0 14px}
+.ribbon-tab:hover{background:#f5f7fb;color:#203b68}
+.ribbon-tab.active{color:var(--bd-accent-strong)}
+.ribbon-tab.active:after{background:var(--bd-accent);height:2px}
+.toolbar{background:#f8f9fb;border-bottom:1px solid var(--bd-line);padding:8px 12px;gap:0}
+.ribbon-group{border-right:1px solid #e0e5ed;padding-left:10px;padding-right:10px}
+.ribbon-group-label{color:#77859a}
+.tool{color:#3f4d62;border-radius:5px;font-size:11px}
+.tool:hover{background:#eaf0ff;border-color:#d8e3fb;color:#244da9}
+.tool:active{background:#dce7ff}
+.tool:focus-visible,.primary:focus-visible,.secondary:focus-visible,.nav:focus-visible,.ribbon-tab:focus-visible{outline:2px solid #315fce;outline-offset:2px}
+.editor{background:#fff;color:#26364d;line-height:1.75}
+.editor:empty:before{color:#a2adbd}
+.editor blockquote{border-left-color:#4774d0;color:#5d6e86}
+.sheet-wrap{background:#f8f9fb}
+.sheet{background:#fff;color:#2d3b50}
+.sheet th{background:#f1f4f8;color:#526176;border-color:#dfe5ed}
+.sheet td{border-color:#e4e9f0}
+.grid-cell{color:#26364d}
+.grid-cell:focus{background:#edf3ff;box-shadow:inset 0 0 0 2px #4774d0}
+.cell-ref{background:#f1f4f8;border-color:#dfe5ed;color:#41536d}
+.formula-input{border-color:#d8e0eb;color:#26364d}
+.slide-wrap{background:#f4f6fa}
+.slide-stage{box-shadow:0 5px 18px rgba(35,50,78,.12)}
+.notes-wrap{background:#fff}
+.notes-wrap textarea{color:#26364d}
+.app-manager{background:transparent}
+.manager-hero{background:linear-gradient(110deg,#eaf0ff,#f7f9fd 70%,#edf6f8);border:1px solid #e1e8f3;border-radius:10px;padding:22px 24px}
+.manager-hero h2{color:#20324e}
+.manager-hero p{color:#68778c}
+.manager-hero-mark{color:#557bd0}
+.manager-grid{gap:15px}
+.app-card{border:1px solid #dfe5ee;border-radius:10px;box-shadow:0 2px 7px rgba(29,45,72,.035);padding:15px 16px 13px;transition:transform .14s ease,box-shadow .14s ease,border-color .14s ease}
+.app-card:hover{transform:translateY(-2px);border-color:#b9c9e6;box-shadow:0 8px 20px rgba(29,45,72,.08)}
+.app-preview{height:132px;object-fit:cover;border:1px solid #e3e8f0;border-radius:7px;background:#f7f9fc}
+.app-card-heading b{color:#25354c;font-size:13px}
+.app-card-heading small{color:#738197}
+.app-card p{color:#627188}
+.app-card-footer{border-top-color:#edf0f5}
+.module-version{color:#7e8ba0}
+.app-state.installed{color:#16845b}
+.todo-app,.lists-app,.forms-app,.planner-app,.database-app,.workspace-app{border-color:#dfe5ee;border-radius:10px;box-shadow:0 3px 12px rgba(29,45,72,.035)}
+.todo-sidebar,.lists-sidebar,.forms-sidebar,.planner-sidebar,.database-sidebar,.workspace-sidebar{background:#f7f9fc;border-color:#e1e7ef}
+.todo-view.active,.lists-side-item.active,.forms-side-item.active,.planner-side-item.active,.database-table-item.active{background:#eaf0ff;color:#244da9}
+.todo-view:hover,.lists-side-item:hover,.forms-side-item:hover,.planner-side-item:hover,.database-table-item:hover{background:#f0f4fb;color:#294f98}
+.todo-task-card,.planner-task-card,.forms-question-card,.forms-response-card,.workspace-block{border-color:#e1e7ef;box-shadow:0 1px 3px rgba(29,45,72,.025)}
+.todo-task-card:hover,.planner-task-card:hover{border-color:#c6d3e7}
+.todo-task-check,.workspace-check-item>input[type=checkbox]{accent-color:var(--bd-accent)}
+.lists-table th,.database-data-grid th{background:#f2f5f9;color:#506078}
+.lists-table th,.lists-table td,.database-data-grid th,.database-data-grid td{border-color:#e5eaf1}
+.forms-tabs button.active{color:#244da9;border-bottom-color:var(--bd-accent)}
+.workspace-block-callout{background:#f0f5ff;border-color:#dce7fb}
+.workspace-block-callout .workspace-block-content{color:#365681}
+.workspace-small-action:hover{background:#edf2fa;color:#315fce}
+input,select,textarea{accent-color:var(--bd-accent)}
+input:not([type=checkbox]):not([type=radio]),select,textarea{border-color:#d8e0eb}
+input:focus,select:focus,textarea:focus{outline:2px solid rgba(49,95,206,.22);outline-offset:1px;border-color:#7d9bda}
+button:disabled{opacity:.55;cursor:not-allowed}
+@media(max-width:1050px){.sidebar{width:216px}}
+@media(max-width:760px){.manager-grid{grid-template-columns:1fr}.app-preview{height:145px}.main{padding-top:15px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Brightdesk portfolio refresh — shared professional workspace layer.
+   This layer refines hierarchy, spacing, responsive behaviour and interaction states
+   without changing product workflows or replacing each app's own accent colour. */
+:root {
+  --bd-ui-canvas: #f4f6fa;
+  --bd-ui-surface: #ffffff;
+  --bd-ui-surface-muted: #f8f9fc;
+  --bd-ui-ink: #1c2940;
+  --bd-ui-text: #40516a;
+  --bd-ui-muted: #718097;
+  --bd-ui-line: #e1e7ef;
+  --bd-ui-line-strong: #d3dce8;
+  --bd-ui-radius: 12px;
+  --bd-ui-radius-lg: 16px;
+  --bd-ui-shadow: 0 8px 28px rgba(28, 45, 72, .065);
+  --bd-ui-shadow-hover: 0 14px 34px rgba(28, 45, 72, .11);
+  --bd-ui-focus: #315fce;
+}
+html { min-width: 320px; background: var(--bd-ui-canvas); }
+body { color: var(--bd-ui-ink); background: var(--bd-ui-canvas); text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+button, input, select, textarea { font: inherit; }
+button { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible,
+textarea:focus-visible, [contenteditable="true"]:focus-visible, [tabindex]:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--bd-focus, var(--bd-ui-focus)) 72%, transparent);
+  outline-offset: 2px;
+}
+::selection { background: color-mix(in srgb, var(--bd-accent, var(--bd-ui-focus)) 18%, white); }
+.sidebar { background: var(--bd-ui-surface); border-color: var(--bd-ui-line); }
+.brand { min-height: 52px; }
+.brand b { color: var(--bd-ui-ink); }
+.section-label, .eyebrow { color: #78869b; letter-spacing: .11em; }
+.nav { min-height: 44px; border-radius: 9px; color: var(--bd-ui-text); transition: background .16s ease, color .16s ease, transform .16s ease; }
+.nav:hover { background: #f3f6fb; color: var(--bd-ui-ink); }
+.nav.active { background: color-mix(in srgb, var(--bd-accent, #315fce) 9%, white); color: var(--bd-accent-strong, #234aa8); }
+.nav.active small { color: var(--bd-ui-muted); }
+.sidebar-divider { background: var(--bd-ui-line); }
+.main { min-width: 0; }
+.topbar { gap: 18px; }
+.topbar h1 { color: var(--bd-ui-ink); font-weight: 680; letter-spacing: -.035em; }
+.save-status, .local-tag, .module-version { color: var(--bd-ui-muted); }
+.welcome { border: 1px solid #e0e8f3; border-radius: var(--bd-ui-radius-lg); background: linear-gradient(112deg, #edf2ff 0%, #f6f8fd 58%, #edf5f8 100%); }
+.welcome h2 { color: #1d3150; letter-spacing: -.035em; }
+.welcome p { max-width: 68ch; color: #62738c; line-height: 1.65; }
+.workspace, .todo-app, .lists-app, .forms-app, .planner-app, .database-app, .workspace-app {
+  min-width: 0; border: 1px solid var(--bd-ui-line); border-radius: var(--bd-ui-radius);
+  background: var(--bd-ui-surface); box-shadow: var(--bd-ui-shadow);
+}
+.document-bar, .ribbon-tabs { border-color: var(--bd-ui-line); }
+.document-bar input { color: var(--bd-ui-ink); }
+.toolbar { background: var(--bd-ui-surface-muted); border-color: var(--bd-ui-line); }
+.ribbon-tab { min-height: 40px; }
+.tool { min-height: 32px; border-radius: 7px; transition: background .14s ease, border-color .14s ease, color .14s ease; }
+.tool:hover { background: color-mix(in srgb, var(--bd-accent, #315fce) 8%, white); }
+.editor { color: var(--bd-ui-ink); line-height: 1.8; }
+.primary, .secondary { min-height: 38px; border-radius: 8px; font-weight: 650; transition: transform .14s ease, box-shadow .14s ease, background .14s ease; }
+.primary { background: var(--bd-accent, #315fce); border-color: var(--bd-accent, #315fce); }
+.primary:hover { background: var(--bd-accent-strong, #234aa8); border-color: var(--bd-accent-strong, #234aa8); }
+.secondary { border: 1px solid var(--bd-ui-line-strong); background: #fff; color: #34445a; }
+.secondary:hover { background: #f6f8fb; border-color: #b8c5d7; }
+.primary:active, .secondary:active { transform: translateY(1px); }
+.manager-hero { border-radius: var(--bd-ui-radius-lg); border-color: #e0e8f3; background: linear-gradient(112deg, #edf2ff 0%, #f7f9fd 70%, #edf5f8 100%); }
+.manager-hero h2 { color: #1d3150; letter-spacing: -.03em; }
+.manager-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 285px), 1fr)); gap: 16px; }
+.app-card { min-width: 0; border: 1px solid var(--bd-ui-line); border-radius: 13px; background: #fff; box-shadow: 0 2px 8px rgba(28,45,72,.035); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+.app-card:hover { transform: translateY(-2px); border-color: #c2cfe0; box-shadow: var(--bd-ui-shadow-hover); }
+.app-card-heading b { color: var(--bd-ui-ink); }
+.app-card-heading small, .app-card p { color: var(--bd-ui-muted); line-height: 1.55; }
+.app-preview { width: 100%; border: 1px solid var(--bd-ui-line); border-radius: 9px; background: #f7f9fc; }
+.app-card-footer { border-color: var(--bd-ui-line); }
+.todo-sidebar, .lists-sidebar, .forms-sidebar, .planner-sidebar, .database-sidebar, .workspace-sidebar { background: #f8f9fc; border-color: var(--bd-ui-line); }
+.todo-task-card, .planner-task-card, .forms-question-card, .forms-response-card, .workspace-block { border-color: var(--bd-ui-line); border-radius: 10px; }
+input:not([type=checkbox]):not([type=radio]), select, textarea { border-color: var(--bd-ui-line-strong); border-radius: 8px; color: var(--bd-ui-ink); }
+input::placeholder, textarea::placeholder { color: #8996a8; opacity: 1; }
+input:disabled, select:disabled, textarea:disabled, button:disabled { cursor: not-allowed; opacity: .58; }
+[hidden] { display: none !important; }
+@media (min-width: 1500px) { .manager-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 900px) { .sidebar { width: 210px; } .main { padding-left: 20px; padding-right: 20px; } }
+@media (max-width: 700px) {
+  body { display: block; min-width: 320px; }
+  .sidebar { width: 100%; min-height: 0; padding: 12px; border-right: 0; border-bottom: 1px solid var(--bd-ui-line); }
+  .brand { padding: 0 8px 12px; }
+  .section-label, .sidebar-bottom { display: none; }
+  .sidebar > .nav, .sidebar #dynamic-app-nav { display: inline-flex; vertical-align: middle; }
+  .nav { width: auto; max-width: 48%; margin: 2px; padding: 7px 9px; }
+  .nav small { display: none; }
+  .main { padding: 16px 12px; }
+  .topbar { align-items: flex-start; flex-direction: column; }
+  .top-actions { width: 100%; justify-content: flex-start; }
+  .welcome { min-height: 0; padding: 20px; }
+  .welcome h2 { font-size: clamp(21px, 5vw, 27px); }
+  .manager-grid { grid-template-columns: 1fr; }
+  .app-preview { height: auto; min-height: 120px; }
+  .toolbar { overflow-x: auto; flex-wrap: nowrap; align-items: center; }
+  .ribbon-group { flex: 0 0 auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+
+/* Product identity accent — Brightdesk-Workspace. */
+:root{--bd-accent:#4b68a8;--bd-accent-strong:#395287;--bd-accent-soft:#e9effb;--bd-focus:#4b68a8}
