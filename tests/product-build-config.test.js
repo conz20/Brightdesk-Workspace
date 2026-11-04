@@ -22,6 +22,25 @@ test('product build and verification scripts use matching product-specific paths
     assert.equal(pkg.scripts[`release:verify:${platform}`], `npm run verify:desktop:${platform}`);
   }
   assert.equal(fs.existsSync(path.join(root, 'scripts', 'verify-desktop-installers.js')), true);
+  const configPath = path.join(root, 'electron-builder.app.config.js');
+  const previousId = process.env.BRIGHTDESK_APP_ID;
+  try {
+    process.env.BRIGHTDESK_APP_ID = 'loop';
+    delete require.cache[require.resolve(configPath)];
+    const config = require(configPath);
+    assert.equal(config.appId, 'org.brightdesk.loop');
+    assert.equal(config.productName, 'Brightdesk Workspace');
+    assert.equal(config.extraMetadata.brightdeskAppId, 'loop');
+    assert.equal(config.win.artifactName, 'Brightdesk-Workspace-${version}-${arch}.${ext}');
+    assert.equal(config.mac.artifactName, 'Brightdesk-Workspace-${version}-${arch}.${ext}');
+    assert.equal(config.linux.artifactName, 'brightdesk-workspace-${version}-${arch}.${ext}');
+    assert.equal(config.appImage.artifactName, config.linux.artifactName);
+    assert.ok(config.asarUnpack.includes('native/brightdesk_engine.node'));
+  } finally {
+    if (previousId === undefined) delete process.env.BRIGHTDESK_APP_ID;
+    else process.env.BRIGHTDESK_APP_ID = previousId;
+    delete require.cache[require.resolve(configPath)];
+  }
 });
 
 test('Rust verification checks formatting without silently rewriting source', () => {
