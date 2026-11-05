@@ -8,6 +8,7 @@ const { execFileSync } = require('node:child_process');
 
 const runnerScript = path.join(__dirname, '..', 'scripts', 'brightdesk-private-runner', 'run-private-project-check.sh');
 const workflow = path.join(__dirname, '..', '.github', 'workflows', 'brightdesk-private-maintenance.yml');
+const isSuiteRepository = require('../package.json').name === 'brightdesk-suite';
 
 test('private project check script has valid Bash syntax', { skip: process.platform === 'win32' }, () => {
   execFileSync('bash', ['-n', runnerScript], { stdio: 'pipe' });
@@ -39,7 +40,7 @@ test('private project checker runs Rust format, Clippy and Cargo tests when a wo
 
 });
 
-test('private project jobs install the pinned Rust toolchain only for Rust-enabled checkouts', () => {
+test('private project jobs install the pinned Rust toolchain only for Rust-enabled checkouts', { skip: !isSuiteRepository }, () => {
   const source = fs.readFileSync(workflow, 'utf8');
   assert.equal(source.split("dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8").length - 1, 3);
   assert.equal(source.split("hashFiles('source/rust/Cargo.toml') != ''").length - 1, 3);
@@ -47,13 +48,13 @@ test('private project jobs install the pinned Rust toolchain only for Rust-enabl
   assert.equal((source.match(/components: rustfmt, clippy/g) || []).length, 3);
 });
 
-test('controller grants only read access through the default workflow token', () => {
+test('controller grants only read access through the default workflow token', { skip: !isSuiteRepository }, () => {
   const source = fs.readFileSync(workflow, 'utf8');
   assert.match(source, /permissions:\n  contents: read/);
   assert.doesNotMatch(source, /contents: write/);
 });
 
-test('private checkout tokens remain read-only and diagnostic token is issue-only', () => {
+test('private checkout tokens remain read-only and diagnostic token is issue-only', { skip: !isSuiteRepository }, () => {
   const source = fs.readFileSync(workflow, 'utf8');
   assert.equal((source.match(/actions\/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1/g) || []).length, 5);
   assert.equal((source.match(/repositories: \$\{\{ matrix\.project \}\}/g) || []).length, 2);
@@ -68,7 +69,7 @@ test('private checkout tokens remain read-only and diagnostic token is issue-onl
   assert.doesNotMatch(source, /BRIGHTDESK_PRIVATE_REPOSITORIES_READ/);
 });
 
-test('private diagnostic reporter always runs its local guard after a job failure', () => {
+test('private diagnostic reporter always runs its local guard after a job failure', { skip: !isSuiteRepository }, () => {
   const source = fs.readFileSync(workflow, 'utf8');
   const reporter = source.split('      - name: Save sanitized failure names to the private Suite issue')[1]?.split('  weekly-private-installer-builds:')[0] ?? '';
   assert.ok(reporter.includes('if: always()'));
@@ -80,14 +81,14 @@ test('private diagnostic reporter always runs its local guard after a job failur
   assert.ok(reporter.includes('BRIGHTDESK_PROJECT" == "Brightdesk-suite"'));
   assert.ok(reporter.includes('BRIGHTDESK_TEST_OUTCOME" == "failure"'));
 });
-test('both private jobs safely skip when App credentials are missing', () => {
+test('both private jobs safely skip when App credentials are missing', { skip: !isSuiteRepository }, () => {
   const source = fs.readFileSync(workflow, 'utf8');
   assert.equal((source.match(/id: private-token/g) || []).length, 3);
   assert.equal((source.match(/available=false/g) || []).length, 3);
   assert.equal((source.match(/if: steps\.private-token\.outputs\.available == 'true'/g) || []).length, 12);
 });
 
-test('weekly build matrix includes Windows, macOS and Linux for every private project', () => {
+test('weekly build matrix includes Windows, macOS and Linux for every private project', { skip: !isSuiteRepository }, () => {
   const source = fs.readFileSync(workflow, 'utf8');
   for (const project of ['Brightdesk-suite', 'Brightdesk-Sheets', 'Brightdesk-Decks', 'Brightdesk-Notes', 'Brightdesk-Database', 'Brightdesk-Forms']) {
     assert.ok(source.includes('project: ' + project), project + ' is missing from the build matrix');
@@ -95,7 +96,7 @@ test('weekly build matrix includes Windows, macOS and Linux for every private pr
   for (const platform of ['win', 'mac', 'linux']) assert.ok(source.includes('platform: ' + platform));
 });
 
-test('daily private project checkouts use each repository default branch', () => {
+test('daily private project checkouts use each repository default branch', { skip: !isSuiteRepository }, () => {
   const source = fs.readFileSync(workflow, 'utf8');
   const dailyJob = source.split('  daily-private-tests:')[1]?.split('  weekly-private-installer-builds:')[0] ?? '';
   const checkout = dailyJob.split('      - name: Check out the private Brightdesk project')[1]?.split('      - name: Set up the required Node.js runtime')[0] ?? '';
@@ -104,7 +105,7 @@ test('daily private project checkouts use each repository default branch', () =>
   assert.doesNotMatch(dailyJob, /fix\/suite-diagnostic-tests/);
 });
 
-test('trusted controller updates trigger daily private checks but never start the installer matrix', () => {
+test('trusted controller updates trigger daily private checks but never start the installer matrix', { skip: !isSuiteRepository }, () => {
   const source = fs.readFileSync(workflow, 'utf8');
   const pushTrigger = source.match(/push:\n([\s\S]*?)\n  schedule:/)?.[1] ?? '';
   assert.match(pushTrigger, /branches: \[main\]/);
@@ -121,7 +122,7 @@ test('trusted controller updates trigger daily private checks but never start th
 });
 
 
-test('Brightdesk-AI validation follows current main and records the exact tested revision', () => {
+test('Brightdesk-AI validation follows current main and records the exact tested revision', { skip: !isSuiteRepository }, () => {
   for (const name of [
     'brightdesk-ai-validation.yml',
     'brightdesk-ai-test-coverage-validation.yml'
@@ -188,7 +189,7 @@ test('native installer smoke-test shell script has valid Bash syntax', { skip: p
   execFileSync('bash', ['-n', installScript], { stdio: 'pipe' });
 });
 
-test('one-time Suite installer request starts only Suite platform builds', () => {
+test('one-time Suite installer request starts only Suite platform builds', { skip: !isSuiteRepository }, () => {
   const source = fs.readFileSync(workflow, 'utf8');
   const pushTrigger = source.match(/push:\n([\s\S]*?)\n  schedule:/)?.[1] ?? '';
   const oneTimeJob = source.split('  suite-one-time-installer-smoke-tests:')[1]?.split('  weekly-private-installer-builds:')[0] ?? '';
@@ -205,7 +206,7 @@ test('one-time Suite installer request starts only Suite platform builds', () =>
   assert.doesNotMatch(oneTimeJob, /actions\/upload-artifact/);
 });
 
-test('installer verification and pull request validation use isolated concurrency groups', () => {
+test('installer verification and pull request validation use isolated concurrency groups', { skip: !isSuiteRepository }, () => {
   const source = fs.readFileSync(workflow, 'utf8');
   const concurrency = source.match(/concurrency:\n([\s\S]*?)\n\njobs:/)?.[1] ?? '';
   assert.match(concurrency, /github\.event_name == 'pull_request'/);
@@ -332,7 +333,7 @@ test('private installer diagnostic reporter refuses missing tokens and empty sum
   );
 });
 
-test('installer failure workflow uses a separate Suite-only Issues token and posts only the bounded summary', () => {
+test('installer failure workflow uses a separate Suite-only Issues token and posts only the bounded summary', { skip: !isSuiteRepository }, () => {
   const source = fs.readFileSync(workflow, 'utf8');
   const job = source.split('  suite-one-time-installer-smoke-tests:')[1]?.split('  weekly-private-installer-builds:')[0] ?? '';
   assert.match(job, /id: build-installer/);
