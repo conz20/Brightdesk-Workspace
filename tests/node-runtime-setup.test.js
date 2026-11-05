@@ -22,7 +22,7 @@ test('Node.js 24.22.2 remains the single exact Brightdesk runtime', () => {
   assert.ok(nodeWorkflows.length > 0, 'at least one workflow must configure Node.js');
   for (const workflow of nodeWorkflows) assert.match(workflow.source, /node-version:\s*['"]?24\.22\.2/, workflow.file + ' must use Node.js 24.22.2');
   assert.match(read('AGENTS.md'), /exactly Node\.js \*\*24\.22\.2 LTS\*\*/);
-  assert.match(read('PROJECT_MEMORY.md'), /Use exactly Node\\.js \\*\\*24\\.22\\.2 LTS\\*\\*/);
+  assert.match(read('PROJECT_MEMORY.md'), /Use exactly Node\.js \*\*24\.22\.2 LTS\*\*/);
 });
 
 test('macOS and Linux runtime installer downloads official archives and verifies SHA-256 before extraction', () => {
