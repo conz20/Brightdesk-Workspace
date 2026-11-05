@@ -52,7 +52,7 @@ if (process.platform === 'darwin') {
   run('xcrun', ['lipo', '-create', ...libraries, '-output', destination]);
 } else {
   run(process.platform === 'win32' ? 'cargo.exe' : 'cargo', [
-    'build', '--manifest-path', manifest, '--workspace', '--release'
+    'build', '--manifest-path', manifest, '--workspace', '--release', '--locked'
   ]);
   const library = path.join(releaseDir, nativeNames[process.platform]);
   if (!fs.existsSync(library)) {
