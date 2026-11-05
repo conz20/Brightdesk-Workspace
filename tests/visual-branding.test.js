@@ -16,3 +16,18 @@ test('Workspace follows the approved Brightdesk design contract',()=>{
  assert.ok(readme.includes('docs/BRIGHTDESK_DESIGN.md'));
  assert.ok(brief.includes('BRIGHTDESK_VISUAL_STANDARD.md')&&brief.includes('#4B68A8'));
 });
+
+test('final stylesheet tokens match the exact approved Workspace palette', () => {
+  const css = fs.readFileSync(path.join(root, 'src', 'design-system.css'), 'utf8');
+  const lastHex = (token) => {
+    const values = [...css.matchAll(new RegExp(token + String.raw`\s*:\s*(#[0-9a-f]{6})`, 'gi'))];
+    return values.at(-1)?.[1].toUpperCase();
+  };
+
+  assert.equal(lastHex('--bd-accent'), '#4B68A8');
+  assert.equal(lastHex('--bd-accent-strong'), '#374F88');
+  assert.equal(lastHex('--bd-accent-soft'), '#EDF1F8');
+  assert.equal(lastHex('--bd-product-tint'), '#EDF1F8');
+  assert.equal(lastHex('--bd-canvas'), '#F3F6FA');
+  assert.equal(lastHex('--bd-ink'), '#202B3C');
+});
