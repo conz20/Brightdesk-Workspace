@@ -1,6 +1,6 @@
 FROM node:24.22.2-bookworm
 
-WORKDIR /workspaces/brightdesk-suite
+WORKDIR /workspaces/brightdesk-workspace
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libnss3 libatk-bridge2.0-0 libgtk-3-0 libgbm1 libasound2 \

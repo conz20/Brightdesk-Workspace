@@ -38,13 +38,13 @@
     "verify:desktop:mac": "node scripts/verify-desktop-installers.js mac release/apps loop",
     "verify:desktop:linux": "node scripts/verify-desktop-installers.js linux release/apps loop",
     "rust:fmt": "cargo fmt --manifest-path rust/Cargo.toml --all",
-    "rust:test": "cargo test --manifest-path rust/Cargo.toml --workspace",
-    "rust:build": "cargo build --manifest-path rust/Cargo.toml --workspace --release",
-    "rust:check": "npm run rust:fmt && cargo clippy --manifest-path rust/Cargo.toml --workspace --all-targets -- -D warnings && npm run rust:test && npm run native:build",
+    "rust:test": "cargo test --manifest-path rust/Cargo.toml --workspace --locked",
+    "rust:build": "cargo build --manifest-path rust/Cargo.toml --workspace --release --locked",
+    "rust:check": "cargo fmt --manifest-path rust/Cargo.toml --all -- --check && cargo clippy --manifest-path rust/Cargo.toml --workspace --all-targets --locked -- -D warnings && npm run rust:test && npm run native:build",
     "native:build": "node scripts/build-native.js",
-    "dist:app:win": "node scripts/build-app.js loop win",
-    "dist:app:mac": "node scripts/build-app.js loop mac",
-    "dist:app:linux": "node scripts/build-app.js loop linux",
+    "dist:app:win": "npm run dist:win",
+    "dist:app:mac": "npm run dist:mac",
+    "dist:app:linux": "npm run dist:linux",
     "verify:app:win": "npm run verify:desktop:win",
     "verify:app:mac": "npm run verify:desktop:mac",
     "verify:app:linux": "npm run verify:desktop:linux"
@@ -118,7 +118,7 @@
       "artifactName": "brightdesk-workspace-${version}-${arch}.${ext}"
     },
     "appImage": {
-      "artifactName": "Brightdesk-Workspace-${version}-${arch}.${ext}"
+      "artifactName": "brightdesk-workspace-${version}-${arch}.${ext}"
     },
     "pkg": {
       "license": "TERMS_AND_CONDITIONS.txt",
