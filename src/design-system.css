@@ -309,8 +309,8 @@ body,.main{background:var(--bd-canvas);color:var(--bd-ink)}
 /* Approved Brightdesk product palette v1.0.0 — final token values. */
 :root {
   --bd-accent: #4B68A8;
-  --bd-accent-strong: #374F88;
-  --bd-accent-soft: #EDF1F8;
-  --bd-product-tint: #EDF1F8;
+  --bd-accent-strong: #395287;
+  --bd-accent-soft: #EFF2F9;
+  --bd-product-tint: #EFF2F9;
   --bd-focus: #4B68A8;
 }
