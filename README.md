@@ -23,6 +23,9 @@ This repository contains the desktop source for Brightdesk Workspace. Electron h
 
 ## Shared Brightdesk design standard
 
+Follow the local [approved design brief](docs/BRIGHTDESK_DESIGN.md) and canonical [Brightdesk visual standard](https://github.com/connormolloy12/Brightdesk-suite/blob/main/docs/BRIGHTDESK_VISUAL_STANDARD.md). The approved Workspace accent is `#4B68A8`; preserve the shared navy/light shell and this product's original SVG identity.
+
+
 The product follows the [Brightdesk visual and interaction standard](https://github.com/connormolloy12/Brightdesk-suite/blob/main/docs/BRIGHTDESK_VISUAL_STANDARD.md) for branding, icon usage, layout, responsive behaviour and accessibility.
 
 ## Current first-use workflows
