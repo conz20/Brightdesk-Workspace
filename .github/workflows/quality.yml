@@ -46,6 +46,5 @@ jobs:
       - name: Check Rust formatting, lint, tests and native build
         run: npm run rust:check
 
-
       - name: Verify release configuration
         run: npm run release:preflight
