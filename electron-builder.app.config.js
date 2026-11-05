@@ -70,5 +70,8 @@ module.exports = {
     target: ['AppImage', 'deb'],
     category: 'Office',
     artifactName: 'brightdesk-' + appSlug.toLowerCase() + '-${version}-${arch}.${ext}'
+  },
+  appImage: {
+    artifactName: 'brightdesk-' + appSlug.toLowerCase() + '-${version}-${arch}.${ext}'
   }
 };

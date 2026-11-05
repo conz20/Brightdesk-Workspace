@@ -1,5 +1,5 @@
 {
-  "name": "Brightdesk Suite",
+  "name": "Brightdesk Workspace",
   "build": {
     "dockerfile": "Dockerfile"
   },
