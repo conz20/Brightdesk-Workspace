@@ -40,7 +40,7 @@ if (process.platform === 'darwin') {
 
   const libraries = targets.map(target => {
     run('cargo', [
-      'build', '--manifest-path', manifest, '--workspace', '--release', '--locked', '--locked', '--target', target
+      'build', '--manifest-path', manifest, '--workspace', '--release', '--locked', '--target', target
     ]);
     const library = path.join(root, 'rust', 'target', target, 'release', nativeNames.darwin);
     if (!fs.existsSync(library)) {
