@@ -305,3 +305,12 @@ body,.main{background:var(--bd-canvas);color:var(--bd-ink)}
 .primary{background:var(--bd-accent);border-color:var(--bd-accent)}
 .primary:hover{background:var(--bd-accent-strong);border-color:var(--bd-accent-strong)}
 .tool:focus-visible,.primary:focus-visible,.secondary:focus-visible,.nav:focus-visible,.ribbon-tab:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--bd-accent);outline-offset:2px}
+
+/* Approved Brightdesk product palette v1.0.0 — final token values. */
+:root {
+  --bd-accent: #4B68A8;
+  --bd-accent-strong: #374F88;
+  --bd-accent-soft: #EDF1F8;
+  --bd-product-tint: #EDF1F8;
+  --bd-focus: #4B68A8;
+}
