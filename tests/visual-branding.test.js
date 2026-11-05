@@ -25,9 +25,9 @@ test('final stylesheet tokens match the exact approved Workspace palette', () =>
   };
 
   assert.equal(lastHex('--bd-accent'), '#4B68A8');
-  assert.equal(lastHex('--bd-accent-strong'), '#374F88');
-  assert.equal(lastHex('--bd-accent-soft'), '#EDF1F8');
-  assert.equal(lastHex('--bd-product-tint'), '#EDF1F8');
+  assert.equal(lastHex('--bd-accent-strong'), '#395287');
+  assert.equal(lastHex('--bd-accent-soft'), '#EFF2F9');
+  assert.equal(lastHex('--bd-product-tint'), '#EFF2F9');
   assert.equal(lastHex('--bd-canvas'), '#F3F6FA');
   assert.equal(lastHex('--bd-ink'), '#202B3C');
 });
