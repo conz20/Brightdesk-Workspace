@@ -9,7 +9,7 @@
 
 <p align="center"><sub>Select the preview to open the full-size artwork.</sub></p>
 
-> **Concept preview:** This is original design artwork for Brightdesk Workspace, not a screenshot captured from a running desktop build.
+> **Concept artwork — not a screenshot.** The preview above is original Brightdesk design artwork, not a capture from the running desktop build. A genuine screenshot will be added only after the current product window has been launched and its primary workflow checked.
 
 ## Desktop implementation
 
@@ -25,17 +25,16 @@ This repository contains the desktop source for Brightdesk Workspace. Electron h
 
 The product follows the [Brightdesk visual and interaction standard](https://github.com/connormolloy12/Brightdesk-suite/blob/main/docs/BRIGHTDESK_VISUAL_STANDARD.md) for branding, icon usage, layout, responsive behaviour and accessibility.
 
-## Product experience
+## Current first-use workflows
 
-Brightdesk Workspace is designed as a local-first project home that connects pages, notes, checklists and resources in one organised place.
+- Create, rename and delete local workspaces.
+- Create, rename and delete pages within a workspace.
+- Add, edit, delete and reorder paragraph, heading, bullet, callout, divider and checklist blocks.
+- Add, edit, complete and remove checklist items.
+- Search page titles and block content.
+- Keep workspaces and pages saved on this device.
 
-## Planned capabilities
-
-- Create workspaces, pages and project areas.
-- Add and organise content blocks.
-- Connect notes, tasks and resources within a project.
-- Show useful project context and recent activity.
-- Keep project information on this device.
+**Not included in this first version:** Live collaboration, shared workspaces, accounts, cloud sync, permissions, external integrations and connected multi-user components.
 
 ## Implementation status
 
