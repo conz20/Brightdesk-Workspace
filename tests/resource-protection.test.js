@@ -5,6 +5,7 @@ const path = require('node:path');
 
 const root = path.join(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
+const isSuiteRepository = require('../package.json').name === 'brightdesk-suite';
 
 test('renderer exposes language selection and catalogue installation only', () => {
   const html = read('src/index.html');
@@ -44,7 +45,7 @@ test('Windows installer displays the Brightdesk licence and offers a normal setu
   assert.equal(pkg.build.nsis.createStartMenuShortcut, true);
 });
 
-test('release workflow has working install and release permissions', () => {
+test('release workflow has working install and release permissions', { skip: !isSuiteRepository }, () => {
   const workflow = read('.github/workflows/build-release.yml');
   assert.match(workflow, /node-version: 24\.22\.2/);
   assert.match(workflow, /run: npm ci/);
