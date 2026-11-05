@@ -38,13 +38,13 @@ jobs:
       - name: Install locked dependencies
         run: npm ci --no-audit --no-fund
 
+      - name: Check Rust formatting, lint, tests and native build
+        run: npm run rust:check
+
       - name: Run the complete product test suite
         env:
           BRIGHTDESK_REQUIRE_NATIVE_ENGINE: "1"
         run: npm test
-
-      - name: Check Rust formatting, lint, tests and native build
-        run: npm run rust:check
 
       - name: Verify release configuration
         run: npm run release:preflight
