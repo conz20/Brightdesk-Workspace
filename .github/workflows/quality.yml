@@ -29,8 +29,11 @@ jobs:
           node-version: 24.22.2
           cache: npm
 
-      - name: Set up stable Rust
+      - name: Set up the pinned Rust toolchain
         uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.99.1
+          components: rustfmt, clippy
 
       - name: Cache Rust build
         uses: Swatinem/rust-cache@v2
@@ -41,11 +44,13 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
 
-      - name: Run application tests
-        run: npm test
-
       - name: Check Rust formatting, lint, tests and native build
         run: npm run rust:check
+
+      - name: Run application tests with the native engine required
+        env:
+          BRIGHTDESK_REQUIRE_NATIVE_ENGINE: "1"
+        run: npm test
 
       - name: Verify release configuration
         run: npm run release:preflight
