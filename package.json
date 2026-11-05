@@ -45,9 +45,9 @@
     "dist:app:win": "node scripts/build-app.js loop win",
     "dist:app:mac": "node scripts/build-app.js loop mac",
     "dist:app:linux": "node scripts/build-app.js loop linux",
-    "verify:app:win": "node scripts/verify-standalone-apps.js win release/apps loop",
-    "verify:app:mac": "node scripts/verify-standalone-apps.js mac release/apps loop",
-    "verify:app:linux": "node scripts/verify-standalone-apps.js linux release/apps loop"
+    "verify:app:win": "npm run verify:desktop:win",
+    "verify:app:mac": "npm run verify:desktop:mac",
+    "verify:app:linux": "npm run verify:desktop:linux"
   },
   "dependencies": {
     "docx": "9.15.1",
