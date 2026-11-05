@@ -83,4 +83,9 @@ test("Rust CI uses verified immutable action pins and requires the native engine
   assert.equal(rustWorkflowSource.includes("a26af69be951a213d495a4c3e4e4022e16d87065"), false);
   assert.ok(rustWorkflowSource.includes('BRIGHTDESK_REQUIRE_NATIVE_ENGINE: "1"'));
   assert.ok(rustWorkflowSource.includes("npm run rust:check"));
+  const nativeBuildStep = rustWorkflowSource.indexOf("run: npm run rust:check");
+  const nativeRequiredTestStep = rustWorkflowSource.indexOf("run: npm test");
+  assert.ok(nativeBuildStep !== -1, "workflow must build the native engine");
+  assert.ok(nativeRequiredTestStep !== -1, "workflow must run the complete test suite");
+  assert.ok(nativeBuildStep < nativeRequiredTestStep, "native engine must be built before tests require it");
 });
