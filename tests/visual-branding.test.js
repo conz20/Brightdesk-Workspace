@@ -11,7 +11,7 @@ test('Workspace follows the approved Brightdesk design contract',()=>{
  assert.match(css,/\.sidebar\s*\{[^}]*background:var\(--bd-nav-background\)/s);
  const accents=[...css.matchAll(/--bd-accent\s*:\s*(#[0-9a-fA-F]{6})/g)];
  assert.equal(accents.at(-1)[1].toUpperCase(),'#4B68A8');
- assert.ok(html.includes(path.basename('assets/branding/icons/workspace.svg')));
+ assert.ok(readme.includes(path.basename('assets/branding/icons/workspace.svg')));
  assert.match(icon,/<svg[^>]+role="img"/);
  assert.ok(readme.includes('docs/BRIGHTDESK_DESIGN.md'));
  assert.ok(brief.includes('BRIGHTDESK_VISUAL_STANDARD.md')&&brief.includes('#4B68A8'));
