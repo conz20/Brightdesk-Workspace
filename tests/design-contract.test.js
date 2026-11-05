@@ -16,7 +16,7 @@ test("Brightdesk shared shell matches the approved visual contract", () => {
   ]) {
     assert.ok(css.includes(token + ": " + value + ";"), "missing approved " + token + " value " + value);
   }
-  assert.match(css, /\\.sidebar\\s*\\{[^}]*background:\\s*var\\(--bd-nav-gradient\\)/s);
-  assert.match(css, /:focus-visible\\s*\\{[^}]*outline-color:\\s*var\\(--bd-accent\\)/s);
-  assert.match(css, /@media\\s*\\(prefers-reduced-motion:\\s*reduce\\)/);
+  assert.ok(css.includes(".sidebar {\n  color: var(--bd-nav-text);\n  background: var(--bd-nav-gradient);"), "sidebar must use the shared deep-navy navigation");
+  assert.ok(css.includes(":focus-visible { outline-color: var(--bd-accent); }"), "focus indicator must use the product accent");
+  assert.ok(css.includes("@media (prefers-reduced-motion: reduce) {"), "reduced-motion support is required");
 });
