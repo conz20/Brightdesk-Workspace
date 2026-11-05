@@ -58,7 +58,8 @@ test('Rust checks are read-only and use the committed lockfile', () => {
   const command = pkg.scripts['rust:check'];
   assert.match(command, /cargo fmt .*-- --check/);
   assert.match(command, /cargo clippy .*--locked/);
-  assert.match(command, /cargo test .*--locked/);
+  assert.match(command, /npm run rust:test/);
+  assert.match(pkg.scripts['rust:test'], /^cargo test .*--locked$/);
   assert.match(command, /npm run native:build/);
   assert.doesNotMatch(command, /npm run rust:fmt/);
   const toolchain = fs.readFileSync(path.join(root, 'rust-toolchain.toml'), 'utf8');
