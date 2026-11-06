@@ -5,15 +5,15 @@
 
 <p align="center"><strong>Bring project notes, tasks and resources together.</strong></p>
 
-<p align="center"><a href="https://raw.githubusercontent.com/connormolloy12/Brightdesk-Workspace/main/assets/previews/workspace.svg"><img src="assets/previews/workspace.svg" width="100%" alt="Brightdesk Workspace workspace design preview"></a></p>
+<p align="center"><a href="https://raw.githubusercontent.com/connormolloy12/Brightdesk-Workspace/main/assets/previews/workspace.svg"><img src="assets/previews/workspace.svg" width="100%" alt="Brightdesk Workspace interface design"></a></p>
 
-<p align="center"><sub>Select the preview to open the full-size artwork.</sub></p>
+<p align="center"><sub>Select the interface image to open the full-size design.</sub></p>
 
-> **Concept artwork — not a screenshot.** The preview above is original Brightdesk design artwork, not a capture from the running desktop build. A genuine screenshot will be added only after the current product window has been launched and its primary workflow checked.
+> **Interface design artwork — not a screenshot.** This image shows the intended Brightdesk interface. It is not a capture from the running desktop build. A genuine product screenshot will be added after the current desktop build has been launched and its primary workflow verified.
 
 ## Desktop implementation
 
-This repository contains the desktop source for Brightdesk Workspace. Electron hosts the desktop interface, the product module is maintained in `src/workspace-editor.js`, and the professional visual system is loaded from `src/design-system.css`. The preview above is concept artwork rather than a captured product screenshot.
+This repository contains the desktop source for Brightdesk Workspace. Electron hosts the desktop interface, the product module is maintained in `src/workspace-editor.js`, and the professional visual system is loaded from `src/design-system.css`. The image above is interface design artwork rather than a captured product screenshot.
 
 - [Desktop interface](src/index.html)
 - [Brightdesk Workspace feature module](src/workspace-editor.js)
@@ -54,7 +54,7 @@ These are configured build targets, not confirmation that a package has passed i
 
 ## Implementation status
 
-**Desktop source is committed to `main`.** This repository includes an Electron desktop shell, product modules, the shared visual system, Rust engine integration, build scripts and automated interface tests. The concept preview is not a screenshot from a running build. A platform desktop installer should only be described as ready after its build and verification checks pass.
+**Desktop source is committed to `main`.** This repository includes an Electron desktop shell, product modules, the shared visual system, Rust engine integration, build scripts and automated interface tests. The interface design image is not a screenshot from a running build. A platform desktop installer should only be described as ready after its build and verification checks pass.
 
 ## Design brief
 
