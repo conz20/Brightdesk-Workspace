@@ -17,29 +17,22 @@ concurrency:
 jobs:
   quality:
     name: App tests and Rust engine checks
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64]
     timeout-minutes: 30
     steps:
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Node.js 24.22.2
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24.22.2
-          cache: npm
 
       - name: Set up the pinned Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # Rust toolchain action pinned
         with:
           toolchain: 1.99.1
           components: rustfmt, clippy
-
-      - name: Cache Rust build
-        uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: |
-            rust -> rust/target
 
       - name: Install locked dependencies
         run: npm ci
