@@ -76,11 +76,16 @@ const rustWorkflowSource = readFileSync(
   new URL("../.github/workflows/quality.yml", import.meta.url),
   "utf8"
 );
-test("product quality workflow builds Rust before requiring the native engine in tests", () => {
-  assert.ok(rustWorkflowSource.includes("actions/checkout@v4"));
-  assert.ok(rustWorkflowSource.includes("actions/setup-node@v4"));
-  assert.ok(rustWorkflowSource.includes("toolchain: 1.99.1"));
-  assert.ok(rustWorkflowSource.includes("npm run rust:check"));
+test("Rust CI uses verified immutable action pins and requires the native engine", () => {
+  assert.ok(rustWorkflowSource.includes("actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"));
+  assert.ok(rustWorkflowSource.includes("actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"));
+  assert.ok(rustWorkflowSource.includes("dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8"));
+  assert.equal(rustWorkflowSource.includes("a26af69be951a213d495a4c3e4e4022e16d87065"), false);
   assert.ok(rustWorkflowSource.includes('BRIGHTDESK_REQUIRE_NATIVE_ENGINE: "1"'));
-  assert.ok(rustWorkflowSource.includes("run: npm test"));
+  assert.ok(rustWorkflowSource.includes("npm run rust:check"));
+  const nativeBuildStep = rustWorkflowSource.indexOf("run: npm run rust:check");
+  const nativeRequiredTestStep = rustWorkflowSource.indexOf("run: npm test");
+  assert.ok(nativeBuildStep !== -1, "workflow must build the native engine");
+  assert.ok(nativeRequiredTestStep !== -1, "workflow must run the complete test suite");
+  assert.ok(nativeBuildStep < nativeRequiredTestStep, "native engine must be built before tests require it");
 });

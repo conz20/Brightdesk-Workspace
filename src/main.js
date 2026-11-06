@@ -160,7 +160,7 @@ async function ensureLanguagePackDirectory() {
   try {
     const existing = await fs.readFile(defaultPath);
     if (!crypto.timingSafeEqual(crypto.createHash('sha256').update(existing).digest(), crypto.createHash('sha256').update(bytes).digest())) {
-      throw new Error('The installed default language pack has been changed. Brightdesk will not replace or accept modified language resources. Reinstall the official Brightdesk Pages desktop installer to restore it.');
+      throw new Error('The installed default language pack has been changed. Brightdesk will not replace or accept modified language resources. Reinstall the official Brightdesk Workspace desktop installer to restore it.');
     }
   } catch (error) {
     if (error.code !== 'ENOENT') throw error;
@@ -218,7 +218,7 @@ ipcMain.handle('languages:install', async (event, code) => {
     const existing = await fs.readFile(destination);
     const existingHash = crypto.createHash('sha256').update(existing).digest();
     const bundledHash = crypto.createHash('sha256').update(bytes).digest();
-    if (!crypto.timingSafeEqual(existingHash, bundledHash)) throw new Error('An installed language pack has been modified. Brightdesk will not overwrite it. Reinstall the official Brightdesk Pages desktop installer to restore the protected resource.');
+    if (!crypto.timingSafeEqual(existingHash, bundledHash)) throw new Error('An installed language pack has been modified. Brightdesk will not overwrite it. Reinstall the official Brightdesk Workspace desktop installer to restore the protected resource.');
     return { ok: true, code: pack.code, alreadyInstalled: true };
   } catch (error) {
     if (error.code !== 'ENOENT') throw error;
