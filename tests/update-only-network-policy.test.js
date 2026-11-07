@@ -12,7 +12,7 @@ const main = read('main.js');
 const preload = read('preload.js');
 
 test('product UI does not offer separate desktop installer downloads', () => {
-  assert.doesNotMatch(app, /Download desktop installer/i);
+  assert.doesNotMatch(app, /Download desktop (?:installer|version)/i);
   assert.doesNotMatch(app, /downloadDesktopInstaller|downloadStandaloneApp/);
 });
 
