@@ -15,7 +15,6 @@ contextBridge.exposeInMainWorld('brightdesk', {
   normalizeEmbedding: (values) => ipcRenderer.invoke('native:normalize-embedding', values),
   cosineSimilarity: (left, right) => ipcRenderer.invoke('native:cosine-similarity', left, right),
   rankEmbeddings: (query, candidates, limit) => ipcRenderer.invoke('native:rank-embeddings', query, candidates, limit),
-  downloadDesktopInstaller: (productId) => ipcRenderer.invoke('downloads:desktop-installer', productId),
   openFile: () => ipcRenderer.invoke('file:open'),
   exportFile: (payload) => ipcRenderer.invoke('file:export', payload),
   saveProject: (project) => ipcRenderer.invoke('project:save', project),
