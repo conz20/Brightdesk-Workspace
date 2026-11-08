@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('node:fs/promises');
+const fsConstants = require('node:fs').constants;
 const path = require('node:path');
 const crypto = require('node:crypto');
 const dictionaryCatalogue = require('./dictionary-catalog.json');
@@ -116,6 +117,57 @@ function sha256(value) {
   return crypto.createHash('sha256').update(value).digest('hex');
 }
 
+
+async function readProtectedFile(filePath, maxBytes, resourceName, locale) {
+  const beforeOpen = await fs.lstat(filePath);
+  if (beforeOpen.isSymbolicLink() || !beforeOpen.isFile()) {
+    throw new Error(`Protected ${resourceName} resource for ${locale} must be a regular file, not a symbolic link.`);
+  }
+  if (beforeOpen.size <= 0 || beforeOpen.size > maxBytes) {
+    throw new Error(`Protected ${resourceName} resource for ${locale} is missing or exceeds its size limit.`);
+  }
+
+  let handle;
+  try {
+    const flags = fsConstants.O_RDONLY | (fsConstants.O_NOFOLLOW || 0);
+    try {
+      handle = await fs.open(filePath, flags);
+    } catch (error) {
+      if (error.code === 'ELOOP') {
+        throw new Error(`Protected ${resourceName} resource for ${locale} must not be a symbolic link.`);
+      }
+      throw error;
+    }
+
+    const opened = await handle.stat();
+    if (!opened.isFile() || opened.dev !== beforeOpen.dev || opened.ino !== beforeOpen.ino) {
+      throw new Error(`Protected ${resourceName} resource for ${locale} changed while it was being opened.`);
+    }
+
+    const chunks = [];
+    const buffer = Buffer.allocUnsafe(64 * 1024);
+    let totalBytes = 0;
+    while (true) {
+      const remaining = maxBytes - totalBytes;
+      const readLength = Math.min(buffer.length, remaining + 1);
+      const { bytesRead } = await handle.read(buffer, 0, readLength, null);
+      if (bytesRead === 0) break;
+      totalBytes += bytesRead;
+      if (totalBytes > maxBytes) {
+        throw new Error(`Protected ${resourceName} resource for ${locale} is missing or exceeds its size limit.`);
+      }
+      chunks.push(Buffer.from(buffer.subarray(0, bytesRead)));
+    }
+
+    if (totalBytes === 0) {
+      throw new Error(`Protected ${resourceName} resource for ${locale} is missing or exceeds its size limit.`);
+    }
+    return Buffer.concat(chunks, totalBytes);
+  } finally {
+    if (handle) await handle.close();
+  }
+}
+
 function catalogueEntryForManifest(manifest) {
   const entry = dictionaryCatalogue.entries.find(item => item.id === manifest.catalogueId || item.locale.toLowerCase() === manifest.locale.toLowerCase());
   if (!entry) throw new Error('Only dictionaries from the protected Brightdesk catalogue can be installed or used.');
@@ -154,10 +206,13 @@ class DictionaryService {
       readme: manifest.readmeFile || 'UPSTREAM_README.md'
     };
     const limits = { aff: MAX_AFFIX_BYTES, dic: MAX_DICTIONARY_BYTES, license: MAX_LICENSE_BYTES, readme: MAX_README_BYTES };
+    const folderInfo = await fs.lstat(folder);
+    if (folderInfo.isSymbolicLink() || !folderInfo.isDirectory()) {
+      throw new Error(`Protected dictionary folder for ${manifest.locale} must be a real directory, not a symbolic link.`);
+    }
     const loaded = {};
     for (const [key, filename] of Object.entries(files)) {
-      const bytes = await fs.readFile(path.join(folder, filename));
-      if (!bytes.length || bytes.byteLength > limits[key]) throw new Error(`Protected ${key} resource for ${manifest.locale} is missing or exceeds its size limit.`);
+      const bytes = await readProtectedFile(path.join(folder, filename), limits[key], key, manifest.locale);
       loaded[key] = bytes;
       if (manifest.integrity && sha256(bytes) !== manifest.integrity[key]) {
         throw new Error(`Protected ${key} resource for ${manifest.locale} has changed. Brightdesk refused to load it.`);
