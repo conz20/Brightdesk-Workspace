@@ -80,6 +80,6 @@ The root README is maintained alongside the product, not as an end-of-project ta
 
 ## Individual product window
 
-When opened by itself, Brightdesk Workspace opens directly into its project workspace. The Suite's product-management sidebar and generic welcome banner are removed from this window. Project navigation stays separate from the main project content, where notes, pages, checklists and resources can be organised into a readable work area. The product identity and relevant local-work controls remain at the top.
+When opened by itself, Brightdesk Workspace opens directly into its project workspace. The Suite's generic product-management view and welcome banner are removed from this window; the product's own left navigation remains available, with an optional compact icon rail and accessible labels. Project navigation stays separate from the main project content, where notes, pages, checklists and resources can be organised into a readable work area. The product identity and relevant local-work controls remain at the top.
 
 The interface preview is design artwork showing the intended project-workspace arrangement; it is not a screenshot from a verified running build.
