@@ -1,5 +1,6 @@
 const fs = require('node:fs/promises');
 const path = require('node:path');
+const { TextDecoder } = require('node:util');
 const appCatalog = require('./app-catalog');
 
 const MAX_PROJECT_BYTES = 50 * 1024 * 1024;
@@ -15,6 +16,14 @@ const EXCLUDED_APP_IDS = new Set(['teams', 'outlook', 'onedrive']);
  * the full desktop dependency set has been installed. Every package remains
  * declared in package.json for normal application installs and release builds.
  */
+
+function decodeUtf8(buffer, errorMessage) {
+  try {
+    return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(buffer);
+  } catch {
+    throw new Error(errorMessage);
+  }
+}
 
 function isPlainObject(value) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
@@ -134,7 +143,7 @@ async function openOfficeFile(filePath) {
     return { kind: 'sheets', title: path.basename(filePath, ext), cells: rows };
   }
   if (ext === '.csv' || ext === '.tsv') {
-    const text = buffer.toString('utf8').replace(/^\uFEFF/, '');
+    const text = decodeUtf8(buffer, 'This imported file is not valid UTF-8 text.').replace(/^\uFEFF/, '');
     const rows = ext === '.tsv' ? parseTsv(text) : parseCsv(text);
     return { kind: 'sheets', title: path.basename(filePath, ext), cells: rows };
   }
@@ -156,11 +165,13 @@ async function openOfficeFile(filePath) {
     return { kind: 'slides', title: path.basename(filePath, ext), slides: slides.length ? slides : [{ title: 'Imported presentation', body: '' }] };
   }
   if (ext === '.txt' || ext === '.md' || ext === '.html') {
-    return { kind: ext === '.txt' ? 'notes' : 'pages', title: path.basename(filePath, ext), text: buffer.toString('utf8'), html: ext === '.html' ? buffer.toString('utf8') : undefined };
+    const text = decodeUtf8(buffer, 'This imported file is not valid UTF-8 text.');
+    return { kind: ext === '.txt' ? 'notes' : 'pages', title: path.basename(filePath, ext), text, html: ext === '.html' ? text : undefined };
   }
   if (ext === '.bdesk') {
+    const jsonText = decodeUtf8(buffer, 'This Brightdesk project file is not valid UTF-8 JSON.');
     let project;
-    try { project = JSON.parse(buffer.toString('utf8')); }
+    try { project = JSON.parse(jsonText); }
     catch { throw new Error('This Brightdesk project file is not valid JSON.'); }
     return validateProject(project);
   }
