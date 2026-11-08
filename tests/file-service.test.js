@@ -81,3 +81,25 @@ test('Brightdesk project import rejects malformed JSON with a clear error', asyn
     await assert.rejects(openOfficeFile(filePath), /not valid JSON/);
   } finally { await fs.rm(directory, { recursive: true, force: true }); }
 });
+
+test('text imports reject malformed UTF-8 rather than silently replacing bytes', async () => {
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'brightdesk-invalid-utf8-'));
+  const invalidText = Buffer.from([0x6e,0x61,0x6d,0x65,0x2c,0x76,0x61,0x6c,0x75,0x65,0x0a,0x41,0x6c,0x65,0x78,0x2c,0xc3,0x28]);
+  const invalidProject = Buffer.concat([
+    Buffer.from('{"docs":{"notes":{"text":"'),
+    Buffer.from([0xc3,0x28]),
+    Buffer.from('"}}}')
+  ]);
+  try {
+    for (const extension of ['.csv','.tsv','.txt','.md','.html']) {
+      const filePath = path.join(directory, 'broken' + extension);
+      await fs.writeFile(filePath, invalidText);
+      await assert.rejects(openOfficeFile(filePath), /not valid UTF-8 text/);
+    }
+    const projectPath = path.join(directory, 'broken.bdesk');
+    await fs.writeFile(projectPath, invalidProject);
+    await assert.rejects(openOfficeFile(projectPath), /not valid UTF-8 JSON/);
+  } finally {
+    await fs.rm(directory, { recursive: true, force: true });
+  }
+});
