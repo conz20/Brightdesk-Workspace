@@ -290,3 +290,20 @@ test('installed dictionary integrity rejects symbolic links outside the protecte
     await fs.rm(userData, { recursive: true, force: true });
   }
 });
+
+
+test('Hunspell text decoding rejects malformed bytes instead of replacing them', () => {
+  const validAff = Buffer.from('SET UTF-8\\n', 'utf8');
+  const validDic = Buffer.from('1\\nword\\n', 'utf8');
+  const malformedAff = Buffer.concat([validAff, Buffer.from([0xff])]);
+  const malformedDic = Buffer.concat([validDic, Buffer.from([0xff])]);
+
+  assert.throws(
+    () => decodeHunspellFiles(validAff, malformedDic),
+    /invalid byte sequence/
+  );
+  assert.throws(
+    () => decodeHunspellFiles(malformedAff, validDic),
+    /invalid byte sequence/
+  );
+});
