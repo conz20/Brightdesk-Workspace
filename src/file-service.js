@@ -35,7 +35,9 @@ function assertSheetDimensions(rowCount, columnCount) {
   if (!Number.isSafeInteger(rowCount) || !Number.isSafeInteger(columnCount) || rowCount < 0 || columnCount < 0) {
     throw new Error('The imported spreadsheet has invalid worksheet dimensions.');
   }
-  if (columnCount > 0 && rowCount > Math.floor(MAX_SHEET_CELLS / columnCount)) {
+  const boundedRows = Math.max(1, rowCount);
+  const boundedColumns = Math.max(1, columnCount);
+  if (boundedRows > Math.floor(MAX_SHEET_CELLS / boundedColumns)) {
     throw new Error('The imported spreadsheet exceeds the 250,000-cell limit.');
   }
 }
