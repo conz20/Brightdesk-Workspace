@@ -71,13 +71,17 @@ function decodeHunspellFiles(affBytes, dicBytes) {
   };
   const label = encodingAliases[declared] || declared.toLowerCase();
   let decoder;
-  try { decoder = new TextDecoder(label); }
+  try { decoder = new TextDecoder(label, { fatal: true }); }
   catch { throw new Error(`The Hunspell dictionary declares an unsupported character encoding: ${declared}.`); }
-  return {
-    aff: decoder.decode(affBytes).replace(/^\uFEFF/, ''),
-    dic: decoder.decode(dicBytes).replace(/^\uFEFF/, ''),
-    encoding: label
-  };
+  try {
+    return {
+      aff: decoder.decode(affBytes).replace(/^\\uFEFF/, ''),
+      dic: decoder.decode(dicBytes).replace(/^\\uFEFF/, ''),
+      encoding: label
+    };
+  } catch {
+    throw new Error(`The Hunspell dictionary contains an invalid byte sequence for its declared encoding: ${declared}.`);
+  }
 }
 
 function validateDictionaryManifest(manifest) {
