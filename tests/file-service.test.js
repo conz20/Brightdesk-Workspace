@@ -150,3 +150,13 @@ test('XLSX worksheet dimensions reject oversized cell grids before row conversio
   assert.throws(() => assertSheetDimensions(500001, 1), /250,000-cell limit/);
   assert.throws(() => assertSheetDimensions(501, 500), /250,000-cell limit/);
 });
+
+test('CSV and TSV parsers reject malformed quotes and preserve empty quoted cells', () => {
+  for (const parse of [parseCsv, parseTsv]) {
+    assert.throws(() => parse('Name,Note\nAlex,"unfinished'), /invalid quotation/);
+    assert.throws(() => parse('Alex"bad,value'), /invalid quotation/);
+    assert.throws(() => parse('"closed"trailing,value'), /invalid quotation/);
+    assert.deepEqual(parse('Name,Note\nAlex,"hello"'), [['Name','Note'], ['Alex','hello']]);
+    assert.deepEqual(parse('""'), [['']]);
+  }
+});
