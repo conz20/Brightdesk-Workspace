@@ -906,6 +906,29 @@ $('lists-column-type').addEventListener('change',()=>{$('lists-column-options-wr
 $('export-button').addEventListener('click',exportCurrent);$('open-button').addEventListener('click',openFile);$('save-project').addEventListener('click',saveProject);
 $('updates-button').addEventListener('click',async()=>{const msg=$('update-message');msg.hidden=false;msg.textContent=t('common.updateChecking');try{const r=await window.brightdesk.checkForUpdates();if(!r?.ok)msg.textContent=r?.message||'Update checks are not configured yet.';}catch(e){msg.textContent=`Update check failed: ${e.message}`;}});
 window.brightdesk.onUpdateState?.(updateState=>{const msg=$('update-message');msg.hidden=false;msg.textContent=updateState.message;if(updateState.status==='available'){msg.textContent=updateState.message;}if(updateState.status==='downloaded'){const button=document.createElement('button');button.className='text-button';button.textContent=t('common.restartInstall');button.onclick=()=>window.brightdesk.installUpdate();msg.append(' ',button);}});
+
+const productSidebar = document.querySelector('.sidebar');
+const productSidebarToggle = $('sidebar-toggle');
+let sidebarPreference = null;
+function setSidebarCompact(compact) {
+  if (!productSidebar || !productSidebarToggle) return;
+  productSidebar.classList.toggle('is-compact', compact);
+  const label = compact ? 'Expand navigation' : 'Collapse navigation';
+  productSidebarToggle.setAttribute('aria-expanded', String(!compact));
+  productSidebarToggle.setAttribute('aria-label', label);
+  productSidebarToggle.title = label;
+}
+function syncSidebarDensity() {
+  if (sidebarPreference !== null) setSidebarCompact(sidebarPreference);
+  else setSidebarCompact(window.innerWidth > 760 && window.innerWidth <= 900);
+}
+productSidebarToggle?.addEventListener('click', () => {
+  sidebarPreference = !productSidebar.classList.contains('is-compact');
+  setSidebarCompact(sidebarPreference);
+});
+window.addEventListener('resize', syncSidebarDensity);
+syncSidebarDensity();
+
 loadLocal();$('platform').textContent=`Desktop app · ${window.brightdesk.platform}`;
 (async()=>{
   try {
