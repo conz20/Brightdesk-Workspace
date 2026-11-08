@@ -27,6 +27,7 @@ const configs = {
 const genericConfigs = Object.fromEntries((window.BrightdeskAppCatalog || []).filter(item => !['pages','sheets','slides','notes'].includes(item.id)).map(item => [item.id, { title: item.name, heading: item.name, desc: item.description }]));
 const fullCatalog = window.BrightdeskAppCatalog || [];
 const launchAppId = window.brightdesk.launchAppId || null;
+if (launchAppId) document.documentElement.classList.add('is-product-window');
 const catalog = fullCatalog;
 const installableCatalog = catalog.filter(item => item.availability === 'available');
 const state = {
@@ -771,8 +772,21 @@ function render() {
   const manager = state.view === 'manager';
   const languages = state.view === 'languages';
   $('app-manager').hidden = !manager; $('language-manager').hidden = !languages;
-  $('workspace').hidden = manager || languages; $('welcome').hidden = manager || languages || ['todo','lists','forms','planner','database','loop'].includes(state.app);
+  $('workspace').hidden = manager || languages; $('welcome').hidden = manager || languages || Boolean(launchAppId) || ['todo','lists','forms','planner','database','loop'].includes(state.app);
   $('app-title').textContent = manager ? t('sidebar.getApps') : (languages ? t('language.title') : (catalog.find(item => item.id === state.app)?.name || state.app));
+  if (launchAppId) {
+    const eyebrow = document.querySelector('.topbar .eyebrow');
+    if (eyebrow) eyebrow.textContent = 'PRODUCT WORKSPACE';
+    const heading = $('app-title');
+    const sourceIcon = document.querySelector(`.sidebar .nav[data-app="${launchAppId}"] .app-icon-image`);
+    if (heading && sourceIcon && !heading.querySelector('.product-title-icon')) {
+      const icon = sourceIcon.cloneNode();
+      icon.className = 'product-title-icon';
+      icon.alt = '';
+      icon.setAttribute('aria-hidden', 'true');
+      heading.prepend(icon);
+    }
+  }
   $('top-actions').hidden = manager || languages;
   if (manager) {
     $('save-status').textContent = t('manager.manageTitle'); renderAppManager();

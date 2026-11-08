@@ -67,3 +67,10 @@ See [docs/DESIGN_BRIEF.md](docs/DESIGN_BRIEF.md) for the screen designs, navigat
 ## Documentation freshness
 
 The root README is maintained alongside the product, not as an end-of-project task. Every pull request that changes application code, tests, UI, design assets, screenshots, icons, configuration, dependencies, packaging, or build/release workflows must also update this README in the same pull request. Keep feature status, screenshots and visual references, application icons, setup/build instructions, platform compatibility, and repository links aligned with the latest verified implementation. Describe planned or untested functionality as planned, never as completed. The **README freshness** GitHub Actions check requires a root `README.md` update whenever a pull request or direct push to `main` changes a non-Markdown file; a passing check confirms inclusion, while reviewers remain responsible for checking factual accuracy and current visuals.
+
+
+## Individual product window
+
+When opened by itself, Brightdesk Workspace opens directly into its project workspace. The Suite's product-management sidebar and generic welcome banner are removed from this window. Project navigation stays separate from the main project content, where notes, pages, checklists and resources can be organised into a readable work area. The product identity and relevant local-work controls remain at the top.
+
+The interface preview is design artwork showing the intended project-workspace arrangement; it is not a screenshot from a verified running build.
