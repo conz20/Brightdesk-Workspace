@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
-const { cleanFileName, parseCsv, parseTsv, ensureExtension, exportOfficeFile, openOfficeFile, validateProject } = require('../src/file-service');
+const { cleanFileName, parseCsv, parseTsv, ensureExtension, exportOfficeFile, openOfficeFile, validateProject, assertSheetDimensions } = require('../src/file-service');
 
 test('cleanFileName removes unsafe characters and limits length', () => {
   assert.equal(cleanFileName('budget: 2026/report?'), 'budget_ 2026_report_');
@@ -137,4 +137,11 @@ test('CSV and TSV parsers stop as soon as the 250,000-cell limit is exceeded', (
   const tsv = Array(250001).fill('x').join('\t');
   assert.throws(() => parseCsv(csv), /250,000-cell limit/);
   assert.throws(() => parseTsv(tsv), /250,000-cell limit/);
+});
+
+test('XLSX worksheet dimensions reject oversized cell grids before row conversion', () => {
+  assert.doesNotThrow(() => assertSheetDimensions(500, 500));
+  assert.doesNotThrow(() => assertSheetDimensions(0, 0));
+  assert.throws(() => assertSheetDimensions(500001, 1), /250,000-cell limit/);
+  assert.throws(() => assertSheetDimensions(501, 500), /250,000-cell limit/);
 });
