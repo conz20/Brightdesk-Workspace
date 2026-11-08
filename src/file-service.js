@@ -31,6 +31,15 @@ function assertDocumentTextLimit(byteLength) {
   }
 }
 
+function assertSheetDimensions(rowCount, columnCount) {
+  if (!Number.isSafeInteger(rowCount) || !Number.isSafeInteger(columnCount) || rowCount < 0 || columnCount < 0) {
+    throw new Error('The imported spreadsheet has invalid worksheet dimensions.');
+  }
+  if (columnCount > 0 && rowCount > Math.floor(MAX_SHEET_CELLS / columnCount)) {
+    throw new Error('The imported spreadsheet exceeds the 250,000-cell limit.');
+  }
+}
+
 function assertSheetCellLimit(rows) {
   let cellCount = 0;
   for (const row of rows) {
@@ -165,6 +174,7 @@ async function openOfficeFile(filePath) {
     const workbook = new ExcelJS.Workbook(); await workbook.xlsx.load(buffer);
     const sheet = workbook.worksheets[0];
     if (!sheet) return { kind: 'sheets', title: path.basename(filePath, ext), cells: [[]] };
+    assertSheetDimensions(sheet.rowCount, sheet.columnCount);
     const rows = [];
     sheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
       rows[rowNumber - 1] = [];
@@ -267,4 +277,4 @@ async function exportOfficeFile(payload, filePath) {
   if (kind === 'notes' && (ext === '.md' || ext === '.txt')) { await fs.writeFile(filePath, payload.text || '', 'utf8'); return; }
   throw new Error(`This export format is not available for ${kind}.`);
 }
-module.exports = { cleanFileName, parseCsv, parseTsv, ensureExtension, openOfficeFile, exportOfficeFile, validateProject };
+module.exports = { cleanFileName, parseCsv, parseTsv, ensureExtension, openOfficeFile, exportOfficeFile, validateProject, assertSheetDimensions };
