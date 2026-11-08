@@ -25,6 +25,13 @@ This repository contains the desktop source for Brightdesk Workspace. Electron h
 
 The product follows the [Brightdesk visual and interaction standard](https://github.com/connormolloy12/Brightdesk-suite/blob/main/docs/BRIGHTDESK_VISUAL_STANDARD.md) for branding, icon usage, layout, responsive behaviour and accessibility.
 
+
+## Product navigation
+
+The left navigation can be collapsed to a slim 76 px icon rail and expanded again with the navigation control. In the compact state, the original SVG icons remain visible and each item keeps its full accessible name and tooltip. At medium window widths the rail starts compact to preserve workspace room; at narrow mobile widths the existing horizontal navigation layout is retained. This control exists in individual product windows only. The Suite keeps its fixed 192 px labelled sidebar and has no expand/collapse option.
+
+The interface preview remains design artwork, not a captured product screenshot. A real screenshot will be added only after the running desktop window has been launched and visually checked.
+
 ## Cross-platform consistency
 
 The Windows, macOS and Linux editions use the same approved Brightdesk interface and supported product scope. Shared layout, typography, spacing, component states and navigation follow the [Brightdesk visual and interaction standard](https://github.com/connormolloy12/Brightdesk-suite/blob/main/docs/BRIGHTDESK_VISUAL_STANDARD.md). This product's original icon and approved accent remain the same on every operating system. Only operating-system integrations such as window controls, native file dialogs, keyboard conventions and package formats may adapt to platform conventions.
