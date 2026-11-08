@@ -26,6 +26,8 @@ This repository contains the desktop source for Brightdesk Workspace. Electron h
 The product follows the [Brightdesk visual and interaction standard](https://github.com/connormolloy12/Brightdesk-suite/blob/main/docs/BRIGHTDESK_VISUAL_STANDARD.md) for branding, icon usage, layout, responsive behaviour and accessibility.
 
 
+<p align="center"><img src="https://raw.githubusercontent.com/connormolloy12/Brightdesk-Design-System/design/product-window-system-2026-11-08/assets/navigation-states.svg" alt="Brightdesk navigation reference showing the fixed labelled Suite sidebar and optional compact product navigation" width="100%"></p>
+
 ## Product navigation
 
 The left navigation can be collapsed to a slim 76 px icon rail and expanded again with the navigation control. In the compact state, the original SVG icons remain visible and each item keeps its full accessible name and tooltip. At medium window widths the rail starts compact to preserve workspace room; at narrow mobile widths the existing horizontal navigation layout is retained. This control exists in individual product windows only. The Suite keeps its fixed 192 px labelled sidebar and has no expand/collapse option.
