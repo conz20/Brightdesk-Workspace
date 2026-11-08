@@ -115,7 +115,8 @@ function cleanFileName(value) {
   return String(value || 'Brightdesk file').replace(/[<>:"/\\|?*\x00-\x1F]/g, '_').slice(0, 120) || 'Brightdesk file';
 }
 function parseDelimited(text, delimiter) {
-  const rows = []; let row = [], cell = '', quoted = false, cellCount = 0;
+  const rows = [];
+  let row = [], cell = '', quoted = false, quoteClosed = false, fieldStarted = false, cellCount = 0;
   const pushCell = () => {
     cellCount++;
     if (cellCount > MAX_SHEET_CELLS) {
@@ -123,18 +124,59 @@ function parseDelimited(text, delimiter) {
     }
     row.push(cell);
     cell = '';
+    quoteClosed = false;
+    fieldStarted = false;
   };
+  const rejectMalformedQuotes = () => {
+    throw new Error('This delimited file contains invalid quotation marks.');
+  };
+
   for (let i = 0; i < text.length; i++) {
     const ch = text[i];
-    if (ch === '"' && quoted && text[i + 1] === '"') { cell += '"'; i++; }
-    else if (ch === '"') quoted = !quoted;
-    else if (ch === delimiter && !quoted) pushCell();
-    else if ((ch === '\n' || ch === '\r') && !quoted) {
+    const isNewline = ch === '\n' || ch === '\r';
+
+    if (quoted) {
+      if (ch === '"') {
+        if (text[i + 1] === '"') { cell += '"'; i++; }
+        else { quoted = false; quoteClosed = true; }
+      } else cell += ch;
+      continue;
+    }
+
+    if (quoteClosed) {
+      if (ch === delimiter) { pushCell(); continue; }
+      if (isNewline) {
+        if (ch === '\r' && text[i + 1] === '\n') i++;
+        pushCell();
+        rows.push(row);
+        row = [];
+        continue;
+      }
+      rejectMalformedQuotes();
+    }
+
+    if (ch === '"') {
+      if (fieldStarted) rejectMalformedQuotes();
+      quoted = true;
+      fieldStarted = true;
+    } else if (ch === delimiter) {
+      pushCell();
+    } else if (isNewline) {
       if (ch === '\r' && text[i + 1] === '\n') i++;
-      pushCell(); rows.push(row); row = [];
-    } else cell += ch;
+      pushCell();
+      rows.push(row);
+      row = [];
+    } else {
+      cell += ch;
+      fieldStarted = true;
+    }
   }
-  if (cell.length || row.length) { pushCell(); rows.push(row); }
+
+  if (quoted) rejectMalformedQuotes();
+  if (fieldStarted || row.length) {
+    pushCell();
+    rows.push(row);
+  }
   return rows;
 }
 function parseCsv(text) { return parseDelimited(text, ','); }
