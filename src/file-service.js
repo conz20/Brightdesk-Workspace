@@ -104,18 +104,26 @@ function cleanFileName(value) {
   return String(value || 'Brightdesk file').replace(/[<>:"/\\|?*\x00-\x1F]/g, '_').slice(0, 120) || 'Brightdesk file';
 }
 function parseDelimited(text, delimiter) {
-  const rows = []; let row = [], cell = '', quoted = false;
+  const rows = []; let row = [], cell = '', quoted = false, cellCount = 0;
+  const pushCell = () => {
+    cellCount++;
+    if (cellCount > MAX_SHEET_CELLS) {
+      throw new Error('The imported spreadsheet exceeds the 250,000-cell limit.');
+    }
+    row.push(cell);
+    cell = '';
+  };
   for (let i = 0; i < text.length; i++) {
     const ch = text[i];
     if (ch === '"' && quoted && text[i + 1] === '"') { cell += '"'; i++; }
     else if (ch === '"') quoted = !quoted;
-    else if (ch === delimiter && !quoted) { row.push(cell); cell = ''; }
+    else if (ch === delimiter && !quoted) pushCell();
     else if ((ch === '\n' || ch === '\r') && !quoted) {
       if (ch === '\r' && text[i + 1] === '\n') i++;
-      row.push(cell); rows.push(row); row = []; cell = '';
+      pushCell(); rows.push(row); row = [];
     } else cell += ch;
   }
-  if (cell.length || row.length) { row.push(cell); rows.push(row); }
+  if (cell.length || row.length) { pushCell(); rows.push(row); }
   return rows;
 }
 function parseCsv(text) { return parseDelimited(text, ','); }
