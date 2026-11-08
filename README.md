@@ -30,7 +30,7 @@ The product follows the [Brightdesk visual and interaction standard](https://git
 
 ## Product navigation
 
-The left navigation can be collapsed to a slim 76 px icon rail and expanded again with the navigation control. In the compact state, the original SVG icons remain visible and each item keeps its full accessible name and tooltip. At medium window widths the rail starts compact to preserve workspace room; at narrow mobile widths the existing horizontal navigation layout is retained. This control exists in individual product windows only. The Suite keeps its fixed 192 px labelled sidebar and has no expand/collapse option.
+The left navigation is 232 px wide when expanded. It can be collapsed to a slim 76 px icon rail and expanded again with the navigation control. In the compact state, the original SVG icons remain visible and each item keeps its full accessible name and tooltip. At medium window widths the rail starts compact to preserve workspace room; at narrow mobile widths the existing horizontal navigation layout is retained. This control exists in individual product windows only. The Suite keeps its fixed 192 px labelled sidebar and has no expand/collapse option.
 
 The interface preview remains design artwork, not a captured product screenshot. A real screenshot will be added only after the running desktop window has been launched and visually checked.
 
