@@ -25,6 +25,29 @@ function decodeUtf8(buffer, errorMessage) {
   }
 }
 
+function assertDocumentTextLimit(byteLength) {
+  if (byteLength > MAX_DOCUMENT_TEXT_BYTES) {
+    throw new Error('The imported document exceeds the 10 MB text limit.');
+  }
+}
+
+function assertSheetCellLimit(rows) {
+  let cellCount = 0;
+  for (const row of rows) {
+    if (!Array.isArray(row)) continue;
+    cellCount += row.length;
+    if (cellCount > MAX_SHEET_CELLS) {
+      throw new Error('The imported spreadsheet exceeds the 250,000-cell limit.');
+    }
+  }
+}
+
+function assertPresentationSlideLimit(slideCount) {
+  if (slideCount > MAX_SLIDES) {
+    throw new Error('The imported presentation exceeds the 2,000-slide limit.');
+  }
+}
+
 function isPlainObject(value) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
   const prototype = Object.getPrototypeOf(value);
@@ -126,6 +149,7 @@ async function openOfficeFile(filePath) {
   if (ext === '.docx') {
     const mammoth = require('mammoth');
     const result = await mammoth.convertToHtml({ buffer });
+    assertDocumentTextLimit(Buffer.byteLength(result.value, 'utf8'));
     return { kind: 'pages', title: path.basename(filePath, ext), html: result.value, warnings: result.messages.map(m => m.message) };
   }
   if (ext === '.xlsx' || ext === '.xlsm') {
@@ -140,11 +164,13 @@ async function openOfficeFile(filePath) {
         rows[rowNumber - 1][colNumber - 1] = cell.formula ? `=${cell.formula}` : (cell.value?.result ?? cell.value ?? '');
       });
     });
+    assertSheetCellLimit(rows);
     return { kind: 'sheets', title: path.basename(filePath, ext), cells: rows };
   }
   if (ext === '.csv' || ext === '.tsv') {
     const text = decodeUtf8(buffer, 'This imported file is not valid UTF-8 text.').replace(/^\uFEFF/, '');
     const rows = ext === '.tsv' ? parseTsv(text) : parseCsv(text);
+    assertSheetCellLimit(rows);
     return { kind: 'sheets', title: path.basename(filePath, ext), cells: rows };
   }
   if (ext === '.pptx') {
@@ -155,6 +181,7 @@ async function openOfficeFile(filePath) {
     const totalSlideBytes = slideEntries.reduce((total, entry) => total + (entry._data?.uncompressedSize || 0), 0);
     if (totalSlideBytes > 50 * 1024 * 1024) throw new Error('The presentation contains too much uncompressed slide XML to import safely.');
     const names = Object.keys(zip.files).filter(n => /^ppt\/slides\/slide\d+\.xml$/.test(n)).sort((a,b) => Number(a.match(/slide(\d+)/)[1]) - Number(b.match(/slide(\d+)/)[1]));
+    assertPresentationSlideLimit(names.length);
     const parser = new XMLParser({ ignoreAttributes: true, removeNSPrefix: false });
     const slides = [];
     for (const name of names) {
@@ -165,6 +192,7 @@ async function openOfficeFile(filePath) {
     return { kind: 'slides', title: path.basename(filePath, ext), slides: slides.length ? slides : [{ title: 'Imported presentation', body: '' }] };
   }
   if (ext === '.txt' || ext === '.md' || ext === '.html') {
+    assertDocumentTextLimit(buffer.byteLength);
     const text = decodeUtf8(buffer, 'This imported file is not valid UTF-8 text.');
     return { kind: ext === '.txt' ? 'notes' : 'pages', title: path.basename(filePath, ext), text, html: ext === '.html' ? text : undefined };
   }
