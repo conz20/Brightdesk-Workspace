@@ -245,3 +245,48 @@ test('the two licence-file exceptions use bundled canonical GNU texts', async ()
   assert.equal(catalogue.find(item => item.id === 'et').licenseUrl, 'https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt');
   assert.equal(catalogue.find(item => item.id === 'eu').licenseUrl, 'https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt');
 });
+
+
+test('installed dictionary integrity rejects symbolic links outside the protected folder', async (t) => {
+  if (process.platform === 'win32') {
+    t.skip('Creating symbolic links may require elevated Windows permissions.');
+    return;
+  }
+
+  const userData = await fs.mkdtemp(path.join(os.tmpdir(), 'brightdesk-dictionary-symlink-'));
+  const folder = path.join(userData, 'dictionaries', 'en-AU');
+  await fs.mkdir(folder, { recursive: true });
+
+  const affText = 'SET UTF-8\\n';
+  const dicText = '1\\nword\\n';
+  const licenseText = 'A test licence document that is long enough to meet the minimum validation length.';
+  const readmeText = 'A test attribution document that is long enough to meet the minimum validation length.';
+  const externalDictionary = path.join(userData, 'outside-dictionary.dic');
+  await fs.writeFile(path.join(folder, 'dictionary.aff'), affText);
+  await fs.writeFile(externalDictionary, dicText);
+  await fs.writeFile(path.join(folder, 'LICENSE.txt'), licenseText);
+  await fs.writeFile(path.join(folder, 'UPSTREAM_README.md'), readmeText);
+  await fs.symlink(externalDictionary, path.join(folder, 'dictionary.dic'));
+
+  const hash = value => crypto.createHash('sha256').update(value).digest('hex');
+  const integrityManifest = {
+    locale: 'en-AU',
+    readmeFile: 'UPSTREAM_README.md',
+    integrity: {
+      aff: hash(affText),
+      dic: hash(dicText),
+      license: hash(licenseText),
+      readme: hash(readmeText)
+    }
+  };
+  const service = new DictionaryService(userData);
+
+  try {
+    await assert.rejects(
+      () => service.verifyInstalledIntegrity(folder, integrityManifest),
+      /symbolic link/
+    );
+  } finally {
+    await fs.rm(userData, { recursive: true, force: true });
+  }
+});
