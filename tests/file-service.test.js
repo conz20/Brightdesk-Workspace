@@ -103,3 +103,31 @@ test('text imports reject malformed UTF-8 rather than silently replacing bytes',
     await fs.rm(directory, { recursive: true, force: true });
   }
 });
+
+test('CSV and TSV imports reject spreadsheets over the 250,000-cell limit', async () => {
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'brightdesk-large-sheet-'));
+  const row = Buffer.from(Array(250001).fill('x').join(','));
+  try {
+    for (const extension of ['.csv', '.tsv']) {
+      const filePath = path.join(directory, 'large' + extension);
+      await fs.writeFile(filePath, row);
+      await assert.rejects(openOfficeFile(filePath), /250,000-cell limit/);
+    }
+  } finally {
+    await fs.rm(directory, { recursive: true, force: true });
+  }
+});
+
+test('TXT, Markdown and HTML imports enforce the 10 MB text limit', async () => {
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'brightdesk-large-text-'));
+  const oversizedText = Buffer.alloc(10 * 1024 * 1024 + 1, 0x61);
+  try {
+    for (const extension of ['.txt', '.md', '.html']) {
+      const filePath = path.join(directory, 'large' + extension);
+      await fs.writeFile(filePath, oversizedText);
+      await assert.rejects(openOfficeFile(filePath), /10 MB text limit/);
+    }
+  } finally {
+    await fs.rm(directory, { recursive: true, force: true });
+  }
+});
