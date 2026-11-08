@@ -140,6 +140,11 @@ test('CSV and TSV parsers stop as soon as the 250,000-cell limit is exceeded', (
 });
 
 test('XLSX worksheet dimensions reject oversized cell grids before row conversion', () => {
+  assert.doesNotThrow(() => assertSheetDimensions(250000, 0));
+  assert.doesNotThrow(() => assertSheetDimensions(0, 250000));
+  assert.throws(() => assertSheetDimensions(250001, 0), /250,000-cell limit/);
+  assert.throws(() => assertSheetDimensions(0, 250001), /250,000-cell limit/);
+
   assert.doesNotThrow(() => assertSheetDimensions(500, 500));
   assert.doesNotThrow(() => assertSheetDimensions(0, 0));
   assert.throws(() => assertSheetDimensions(500001, 1), /250,000-cell limit/);
