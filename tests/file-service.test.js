@@ -131,3 +131,10 @@ test('TXT, Markdown and HTML imports enforce the 10 MB text limit', async () => 
     await fs.rm(directory, { recursive: true, force: true });
   }
 });
+
+test('CSV and TSV parsers stop as soon as the 250,000-cell limit is exceeded', () => {
+  const csv = Array(250001).fill('x').join(',');
+  const tsv = Array(250001).fill('x').join('\t');
+  assert.throws(() => parseCsv(csv), /250,000-cell limit/);
+  assert.throws(() => parseTsv(tsv), /250,000-cell limit/);
+});
