@@ -21,3 +21,4 @@ html.is-product-window .todo-app,html.is-product-window .lists-app,html.is-produ
 html.is-product-window .main>footer{display:none!important}
 @media(max-width:760px){html.is-product-window .topbar{align-items:flex-start;flex-wrap:wrap;padding:12px 14px}html.is-product-window .topbar h1{font-size:19px}html.is-product-window .top-actions{justify-content:flex-start;width:100%}}
 @media(prefers-reduced-motion:reduce){html.is-product-window *,html.is-product-window *::before,html.is-product-window *::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}
+html.is-product-window .sidebar.is-open-mobile{position:fixed;inset:0 auto 0 0;flex:0 0 232px;width:232px;min-width:232px;height:100vh;padding:27px 17px;z-index:1001;overflow-y:auto;box-shadow:12px 0 30px rgba(16,30,54,.22)}
