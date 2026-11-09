@@ -14,3 +14,12 @@ test('embedded product navigation rails stay slim and retain their labels', () =
   assert.ok(css.lastIndexOf('.todo-sidebar h2{display:block') > css.lastIndexOf('.todo-sidebar h2{display:none'));
   assert.ok(css.lastIndexOf('.nav small{display:block') > css.lastIndexOf('.nav small{display:none'));
 });
+
+
+test('embedded navigation stacks into readable full-width mobile rails', () => {
+  const responsive = css.slice(css.lastIndexOf('@media(max-width:760px){'));
+  assert.ok(responsive.includes('.todo-app,.lists-app,.forms-app,.planner-app,.database-app,.workspace-app{grid-template-columns:1fr}'), 'all embedded product layouts must stack on mobile');
+  assert.ok(responsive.includes('.todo-sidebar,.lists-sidebar,.forms-sidebar,.planner-sidebar,.database-sidebar,.workspace-sidebar{width:100%;min-width:0}'), 'all embedded navigation rails must fit the mobile viewport');
+  assert.match(responsive, /\.nav small\{display:block/);
+  assert.match(responsive, /\.todo-sidebar h2\{display:block/);
+});
