@@ -67,3 +67,7 @@ See [docs/DESIGN_BRIEF.md](docs/DESIGN_BRIEF.md) for the screen designs, navigat
 ## Documentation freshness
 
 The root README is maintained alongside the product, not as an end-of-project task. Every pull request that changes application code, tests, UI, design assets, screenshots, icons, configuration, dependencies, packaging, or build/release workflows must also update this README in the same pull request. Keep feature status, screenshots and visual references, application icons, setup/build instructions, platform compatibility, and repository links aligned with the latest verified implementation. Describe planned or untested functionality as planned, never as completed. The **README freshness** GitHub Actions check requires a root `README.md` update whenever a pull request or direct push to `main` changes a non-Markdown file; a passing check confirms inclusion, while reviewers remain responsible for checking factual accuracy and current visuals.
+
+## Navigation sidebar
+
+Brightdesk is a desktop-only suite for Windows, macOS and Linux. Its navigation sidebar uses a slim 192 px desktop rail. Every navigation item keeps its original icon, readable text label and explanatory caption visible together; captions wrap naturally within the desktop rail. Mobile and tablet versions are not part of the product scope. Do not use icon-only navigation or hide wording to save space.
