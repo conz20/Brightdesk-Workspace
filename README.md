@@ -70,4 +70,4 @@ The root README is maintained alongside the product, not as an end-of-project ta
 
 ## Navigation sidebar
 
-The navigation sidebar uses a slim 192 px rail on desktop and a full-width stacked layout on narrow screens. Every navigation icon, readable text label and explanatory caption remains visible at every supported width; captions wrap naturally. Do not use icon-only navigation or hide wording to save space.
+Brightdesk is a desktop-only suite for Windows, macOS and Linux. Its navigation sidebar uses a slim 192 px desktop rail. Every navigation item keeps its original icon, readable text label and explanatory caption visible together; captions wrap naturally within the desktop rail. Mobile and tablet versions are not part of the product scope. Do not use icon-only navigation or hide wording to save space.
