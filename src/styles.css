@@ -157,13 +157,6 @@
 .brand{padding-bottom:24px}
 .nav{gap:9px;padding:8px 9px;margin:2px 0}
 .nav small{display:block;white-space:normal;overflow-wrap:anywhere;line-height:1.35;letter-spacing:0}
-@media(max-width:720px){
-  .sidebar{width:100%;min-width:0;padding:10px;display:block}
-  .section-label{display:block}
-  .sidebar-bottom{display:flex}
-  .nav{width:100%;display:flex;margin:2px 0;padding:7px 9px}
-  .nav small{display:block}
-}
 
 
 /* Embedded product sidebars follow the same slim, fully labelled standard. */
@@ -181,16 +174,5 @@
 .workspace-sidebar{width:192px;min-width:192px}
 .todo-sidebar h2{display:block}
 .nav small{display:block;white-space:normal;line-height:1.35}
-@media(max-width:760px){
-  .todo-sidebar h2{display:block}
-  .nav small{display:block;white-space:normal;line-height:1.35}
-}
 
 
-/* Mobile embedded navigation: restore the stacked layout after desktop rail sizing. */
-@media(max-width:760px){
-  .todo-app,.lists-app,.forms-app,.planner-app,.database-app,.workspace-app{grid-template-columns:1fr}
-  .todo-sidebar,.lists-sidebar,.forms-sidebar,.planner-sidebar,.database-sidebar,.workspace-sidebar{width:100%;min-width:0}
-  .todo-sidebar h2{display:block}
-  .nav small{display:block;white-space:normal;line-height:1.35}
-}
