@@ -164,3 +164,24 @@
   .nav{width:100%;display:flex;margin:2px 0;padding:7px 9px}
   .nav small{display:block}
 }
+
+
+/* Embedded product sidebars follow the same slim, fully labelled standard. */
+.todo-app{grid-template-columns:192px minmax(0,1fr)}
+.todo-sidebar{width:192px;min-width:192px}
+.lists-app{grid-template-columns:192px minmax(0,1fr)}
+.lists-sidebar{width:192px;min-width:192px}
+.forms-app{grid-template-columns:192px minmax(0,1fr)}
+.forms-sidebar{width:192px;min-width:192px}
+.planner-app{grid-template-columns:192px minmax(0,1fr)}
+.planner-sidebar{width:192px;min-width:192px}
+.database-app{grid-template-columns:192px minmax(0,1fr)}
+.database-sidebar{width:192px;min-width:192px}
+.workspace-app{grid-template-columns:192px minmax(0,1fr)}
+.workspace-sidebar{width:192px;min-width:192px}
+.todo-sidebar h2{display:block}
+.nav small{display:block;white-space:normal;line-height:1.35}
+@media(max-width:760px){
+  .todo-sidebar h2{display:block}
+  .nav small{display:block;white-space:normal;line-height:1.35}
+}
