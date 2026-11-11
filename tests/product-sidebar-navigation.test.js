@@ -12,6 +12,7 @@ test('product navigation supports expanded and compact desktop states', () => {
   assert.ok(html.includes('id="sidebar-toggle"'));
   assert.ok(html.includes('aria-controls="sidebar-nav"'));
   assert.ok(js.includes('function setSidebarState(state)'));
+  assert.ok(js.includes('if (!launchAppId) return;'));
   assert.match(js, /window\.innerWidth\s*<=\s*1007/);
   assert.match(js, /classList\.toggle\('is-compact', compact\)/);
   assert.doesNotMatch(js, /mobileSidebarOpen|is-open-mobile|is-minimal|sidebar-mobile-open|innerWidth\s*<=\s*640/);
