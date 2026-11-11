@@ -921,10 +921,12 @@ function setSidebarState(state) {
   productSidebarToggle.title = label;
 }
 function syncSidebarDensity() {
+  if (!launchAppId) return;
   if (sidebarPreference) setSidebarState(sidebarPreference);
   else setSidebarState(window.innerWidth <= 1007 ? 'compact' : 'expanded');
 }
 productSidebarToggle?.addEventListener('click', () => {
+  if (!launchAppId) return;
   sidebarPreference = productSidebar.classList.contains('is-compact') ? 'expanded' : 'compact';
   syncSidebarDensity();
 });
