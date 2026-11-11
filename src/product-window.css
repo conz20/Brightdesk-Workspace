@@ -39,41 +39,25 @@ html.is-product-window .sidebar.is-compact {
 html.is-product-window .sidebar.is-compact .brand { justify-content: center; gap: 0; padding: 34px 0 22px; }
 html.is-product-window .sidebar.is-compact .brand > div,
 html.is-product-window .sidebar.is-compact .section-label,
-html.is-product-window .sidebar.is-compact .nav > span,
 html.is-product-window .sidebar.is-compact .sidebar-divider,
 html.is-product-window .sidebar.is-compact .sidebar-bottom { display: none !important; }
+html.is-product-window .sidebar.is-compact .nav > span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 html.is-product-window .sidebar.is-compact .nav { justify-content: center; gap: 0; padding-left: 0; padding-right: 0; }
 html.is-product-window .sidebar.is-compact .app-icon-image,
 html.is-product-window .sidebar.is-compact .manager-icon {
   width: var(--bd-navigation-icon-size, 34px);
   height: var(--bd-navigation-icon-size, 34px);
   flex: 0 0 var(--bd-navigation-icon-size, 34px);
-}
-html.is-product-window .sidebar.is-minimal {
-  flex-basis: 0;
-  width: 0;
-  min-width: 0;
-  height: 0;
-  padding: 0;
-  border: 0;
-  overflow: visible;
-}
-html.is-product-window .sidebar.is-minimal .brand,
-html.is-product-window .sidebar.is-minimal .section-label,
-html.is-product-window .sidebar.is-minimal .nav,
-html.is-product-window .sidebar.is-minimal .sidebar-divider,
-html.is-product-window .sidebar.is-minimal .sidebar-bottom { display: none !important; }
-html.is-product-window .sidebar.is-open-mobile {
-  position: fixed;
-  inset: 0 auto 0 0;
-  flex-basis: var(--bd-product-navigation-expanded-width, 232px);
-  width: var(--bd-product-navigation-expanded-width, 232px);
-  min-width: var(--bd-product-navigation-expanded-width, 232px);
-  height: 100vh;
-  padding: 27px 17px;
-  z-index: 1001;
-  overflow-y: auto;
-  box-shadow: 12px 0 30px rgba(16, 30, 54, .22);
 }
 html.is-product-window .sidebar-toggle {
   position: absolute;
@@ -93,26 +77,6 @@ html.is-product-window .sidebar-toggle {
 html.is-product-window .sidebar-toggle:focus-visible {
   outline: 2px solid var(--bd-navigation-focus, #315fce);
   outline-offset: 3px;
-}
-html.is-product-window .sidebar.is-minimal .sidebar-toggle {
-  position: fixed;
-  top: 12px;
-  left: 12px;
-  right: auto;
-  z-index: 1002;
-}
-html.is-product-window .sidebar.is-open-mobile .sidebar-toggle {
-  position: absolute;
-  top: 15px;
-  left: auto;
-  right: 12px;
-}
-body.sidebar-mobile-open::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  background: rgba(12, 23, 40, .36);
 }
 html.is-product-window .main {
   display: flex;
@@ -220,18 +184,6 @@ html.is-product-window .workspace-app {
 }
 html.is-product-window .main > footer {
   display: none !important;
-}
-@media (max-width: 640px) {
-  html.is-product-window .sidebar,
-  html.is-product-window .sidebar.is-compact {
-    flex-basis: 0;
-    width: 0;
-    min-width: 0;
-    height: 0;
-    padding: 0;
-    border: 0;
-    overflow: visible;
-  }
 }
 @media (prefers-reduced-motion: reduce) {
   html.is-product-window .sidebar,
