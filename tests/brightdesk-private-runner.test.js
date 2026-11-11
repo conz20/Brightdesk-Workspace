@@ -179,8 +179,8 @@ test('Suite cross-platform builds perform native install and launch smoke tests'
   assert.ok(windows.includes("$env:BRIGHTDESK_REQUIRE_NATIVE_ENGINE = '1'"));
   assert.match(install, /launch check failed with exit code 124/);
   assert.match(install, /Installed application launch check failed/);
-  assert.match(windows, /Brightdesk-Setup-/);
-  assert.match(windows, /Uninstall Brightdesk\.exe/);
+  assert.match(windows, /build\.win\.artifactName/);
+  assert.match(windows, /Get-ChildItem -LiteralPath \$installDir -File -Filter 'Uninstall\*\.exe'/);
   assert.doesNotMatch(windows, /--version/);
 });
 
@@ -269,13 +269,13 @@ test('private installer diagnostics discard unknown paths and malformed library 
     stage: 'installer installation smoke test',
     exitCode: 127,
     log: [
-      'The Windows installer did not install Brightdesk.exe.',
+      'The Windows installer did not install the product executable.',
       'Missing system runtime libraries: C:\\private\\evil.dll, libvalid.so.1;SECRET, ../private.dll',
       'C:\\Users\\runner\\source\\app.js'
     ].join('\n')
   });
 
-  assert.match(output, /Windows installer did not install Brightdesk\.exe/);
+  assert.match(output, /Windows installer did not install the product executable/);
   assert.ok(!output.includes('evil.dll'));
   assert.ok(!output.includes('SECRET'));
   assert.ok(!output.includes('../private.dll'));
@@ -464,4 +464,67 @@ test('native installer smoke tests bound application launch time and clean up te
   assert.doesNotMatch(powershell, /Start-Sleep -Seconds 5/);
   assert.match(powershell, /taskkill\.exe \/PID/);
   assert.ok(!powershell.includes("& $appPath --version"));
+});
+
+
+test('Windows installer smoke test derives names from the checked-out product manifest and uses a unique temporary directory', () => {
+  const windows = fs.readFileSync(path.join(__dirname, '..', 'scripts', 'brightdesk-private-runner', 'verify-private-install.ps1'), 'utf8');
+  assert.match(windows, /build\.win\.artifactName/);
+  assert.match(windows, /\.Replace\('\$\{version\}'/);
+  assert.match(windows, /\.Replace\('\$\{arch\}'/);
+  assert.match(windows, /\.Replace\('\$\{ext\}'/);
+  assert.match(windows, /build\.productName/);
+  assert.match(windows, /Get-ChildItem -LiteralPath \$installDir -File -Filter 'Uninstall\*\.exe'/);
+  assert.match(windows, /\[guid\]::NewGuid\(\)/);
+  assert.doesNotMatch(windows, /Brightdesk-Setup-\$\(\$package\.version\)-x64\.exe/);
+  assert.doesNotMatch(windows, /Join-Path \$env:RUNNER_TEMP 'brightdesk-install-smoke'/);
+});
+
+test('macOS installer smoke test derives the app bundle name and refuses to overwrite an existing installation', () => {
+  const install = fs.readFileSync(path.join(__dirname, '..', 'scripts', 'brightdesk-private-runner', 'verify-private-install.sh'), 'utf8');
+  assert.match(install, /PRODUCT_NAME=.*package\.json/);
+  assert.match(install, /APP_BUNDLE_NAME="\$\{PRODUCT_NAME\}\.app"/);
+  assert.match(install, /PACKAGE_ID=.*build\?\.appId/);
+  assert.match(install, /pkgutil --pkg-info "\$PACKAGE_ID"/);
+  assert.match(install, /pkgutil --forget "\$PACKAGE_ID"/);
+  assert.match(install, /WORK_DIR="\$\(mktemp -d "\$TEMP_BASE\/brightdesk-installer-smoke\.XXXXXX"\)"/);
+  assert.match(install, /MOUNT_DIR="\$WORK_DIR\/mount"/);
+  assert.match(install, /DMG_APP="\$WORK_DIR\/\$APP_BUNDLE_NAME"/);
+  assert.match(install, /trap cleanup_macos EXIT/);
+  assert.match(install, /if \[\[ -e "\$APP_PATH" \|\| -L "\$APP_PATH" \]\]/);
+  assert.match(install, /INSTALL_ATTEMPTED=0/);
+  assert.match(install, /if \[\[ "\$INSTALL_ATTEMPTED" -eq 1 \]\]/);
+  assert.doesNotMatch(install, /APP_PATH="\/Applications\/Brightdesk\.app"/);
+  assert.doesNotMatch(install, /-name 'Brightdesk\.app'/);
+});
+
+test('Linux installer smoke test refuses to remove a package that was already installed', () => {
+  const install = fs.readFileSync(path.join(__dirname, '..', 'scripts', 'brightdesk-private-runner', 'verify-private-install.sh'), 'utf8');
+  assert.match(install, /dpkg-query -W -f='\$\{db:Status-Status\}' "\$PACKAGE_NAME"/);
+  assert.match(install, /pre-existing package state; refusing to replace or remove it/);
+  assert.match(install, /case "\$INSTALLED_STATUS" in/);
+  assert.match(install, /INSTALL_ATTEMPTED=0/);
+  assert.match(install, /if \[\[ "\$INSTALL_ATTEMPTED" -eq 1 \]\]/);
+});
+
+
+test('macOS installer diagnostics expose only safe bundle and receipt messages', () => {
+  const diagnostics = require('../scripts/brightdesk-private-runner/private-installer-diagnostics');
+  const output = diagnostics.formatPrivateInstallerFailure({
+    platform: 'mac',
+    stage: 'installer installation smoke test',
+    exitCode: 3,
+    log: [
+      'A Brightdesk installer receipt already exists; refusing to modify or forget it.',
+      '/Applications/Brightdesk Office Suite.app',
+      'SECRET_SOURCE_CONTENT'
+    ].join('\n')
+  });
+  const runner = fs.readFileSync(runnerScript, 'utf8');
+
+  assert.match(output, /A Brightdesk installer receipt already exists/);
+  assert.ok(!output.includes('/Applications/'));
+  assert.ok(!output.includes('SECRET_SOURCE_CONTENT'));
+  assert.match(runner, /A Brightdesk installer receipt already exists; refusing to modify or forget it/);
+  assert.doesNotMatch(runner, /Brightdesk\\.app/);
 });
