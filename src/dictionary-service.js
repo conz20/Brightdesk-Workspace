@@ -8,6 +8,7 @@ const dictionaryCatalogue = require('./dictionary-catalog.json');
 
 const CATALOGUE_REVISION = dictionaryCatalogue.catalogueRevision;
 const CATALOGUE_WEB_ROOT = `https://github.com/wooorm/dictionaries/tree/${CATALOGUE_REVISION}/dictionaries`;
+const CATALOGUE_RAW_ROOT = `https://raw.githubusercontent.com/wooorm/dictionaries/${CATALOGUE_REVISION}/dictionaries`;
 
 const OPEN_SOURCE_LICENSES = new Set([
   'MIT', 'ISC', 'BSD', 'BSD-2-Clause', 'BSD-3-Clause', 'Apache-2.0',
