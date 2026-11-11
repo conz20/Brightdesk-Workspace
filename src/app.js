@@ -911,56 +911,22 @@ window.brightdesk.onUpdateState?.(updateState=>{const msg=$('update-message');ms
 const productSidebar = document.querySelector('.sidebar');
 const productSidebarToggle = $('sidebar-toggle');
 let sidebarPreference = null;
-let mobileSidebarOpen = false;
 function setSidebarState(state) {
   if (!productSidebar || !productSidebarToggle) return;
-  productSidebar.classList.toggle('is-compact', state === 'compact');
-  productSidebar.classList.toggle('is-minimal', state === 'minimal');
-  productSidebar.classList.toggle('is-open-mobile', state === 'open-mobile');
-  document.body.classList.toggle('sidebar-mobile-open', state === 'open-mobile');
-  const label = state === 'minimal' ? 'Open navigation' : state === 'open-mobile' ? 'Close navigation' : state === 'compact' ? 'Expand navigation' : 'Collapse navigation';
-  productSidebarToggle.setAttribute('aria-expanded', String(state === 'expanded' || state === 'open-mobile'));
+  const compact = state === 'compact';
+  productSidebar.classList.toggle('is-compact', compact);
+  const label = compact ? 'Expand navigation' : 'Collapse navigation';
+  productSidebarToggle.setAttribute('aria-expanded', String(!compact));
   productSidebarToggle.setAttribute('aria-label', label);
   productSidebarToggle.title = label;
 }
 function syncSidebarDensity() {
-  if (window.innerWidth > 640) mobileSidebarOpen = false;
-  if (window.innerWidth <= 640) setSidebarState(mobileSidebarOpen ? 'open-mobile' : 'minimal');
-  else if (sidebarPreference) setSidebarState(sidebarPreference);
-  else if (window.innerWidth <= 1007) setSidebarState('compact');
-  else setSidebarState('expanded');
+  if (sidebarPreference) setSidebarState(sidebarPreference);
+  else setSidebarState(window.innerWidth <= 1007 ? 'compact' : 'expanded');
 }
 productSidebarToggle?.addEventListener('click', () => {
-  if (window.innerWidth <= 640) {
-    mobileSidebarOpen = !mobileSidebarOpen;
-    syncSidebarDensity();
-    if (mobileSidebarOpen) productSidebar.querySelector('.nav')?.focus();
-    else productSidebarToggle.focus();
-  } else {
-    sidebarPreference = productSidebar.classList.contains('is-compact') ? 'expanded' : 'compact';
-    syncSidebarDensity();
-  }
-});
-productSidebar?.querySelectorAll('.nav').forEach(item => item.addEventListener('click', () => {
-  if (window.innerWidth <= 640 && mobileSidebarOpen) {
-    mobileSidebarOpen = false;
-    syncSidebarDensity();
-    productSidebarToggle.focus();
-  }
-}));
-document.addEventListener('click', event => {
-  if (window.innerWidth <= 640 && mobileSidebarOpen && !productSidebar.contains(event.target)) {
-    mobileSidebarOpen = false;
-    syncSidebarDensity();
-    productSidebarToggle.focus();
-  }
-});
-document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && window.innerWidth <= 640 && mobileSidebarOpen) {
-    mobileSidebarOpen = false;
-    syncSidebarDensity();
-    productSidebarToggle.focus();
-  }
+  sidebarPreference = productSidebar.classList.contains('is-compact') ? 'expanded' : 'compact';
+  syncSidebarDensity();
 });
 window.addEventListener('resize', syncSidebarDensity);
 syncSidebarDensity();
