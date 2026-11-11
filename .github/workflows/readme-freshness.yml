@@ -13,7 +13,7 @@ permissions:
 jobs:
   readme-freshness:
     name: Require README updates for product changes
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64, brightdesk-product-ci]
     steps:
       - name: Check out the change
         uses: actions/checkout@v4
