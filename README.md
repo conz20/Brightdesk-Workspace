@@ -76,3 +76,16 @@ Once installed, this product uses the internet only to check for, download and i
 ## Private CI runner
 
 Pull-request product tests and README checks run on Brightdesk's private macOS ARM64 runner. Routine pull-request verification does not use GitHub-hosted paid runners. Installer matrix builds and release publishing are separate manual workflow actions and are not run by pull-request checks.
+
+
+## Installer and platform verification
+
+The product build configuration defines desktop packages for all three supported operating systems:
+
+- **Windows:** NSIS installer (.exe).
+- **macOS:** DMG, PKG and ZIP packages.
+- **Linux:** AppImage and Debian package (.deb).
+
+The private installer smoke-test scripts are shared verification tooling. Their regression tests check that a test run uses product-specific names and unique temporary locations, refuses to overwrite an existing macOS installation or package receipt, and does not remove a pre-existing Linux package. These source and regression checks are not proof that a native installer has been executed on each operating system.
+
+A platform is complete only after the matching current-version artifacts and SHA-256 records are verified, followed by actual install, first launch, upgrade, repair, uninstall and user-data-preservation checks on that platform. Wine compatibility checks must not be described as native Windows certification. No unverified platform is described as release-ready.
