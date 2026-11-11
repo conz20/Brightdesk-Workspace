@@ -15,7 +15,7 @@ const STAGES = new Set([
   'installer installation smoke test'
 ]);
 const WINDOWS_MESSAGES = [
-  'The Windows installer did not install Brightdesk.exe.',
+  'The Windows installer did not install the product executable.',
   'The installed Windows application did not launch its version check.',
   'The installed Windows application did not complete its startup check.',
   'The Windows installer did not create its uninstaller.'
@@ -24,7 +24,15 @@ const LINUX_MESSAGES = [
   'Place exactly one Brightdesk .deb installer beside this script.',
   'This installer requires a Debian/Ubuntu system with apt-get.',
   'Installed Linux package did not register a desktop application.',
-  'Installed Linux application executable was not found in the desktop entry or PATH.'
+  'Installed Linux application executable was not found in the desktop entry or PATH.',
+  'The Brightdesk Linux package has pre-existing package state; refusing to replace or remove it.'
+];
+const MACOS_MESSAGES = [
+  'The macOS PKG completed without installing the expected product bundle.',
+  'The macOS DMG did not contain the expected product bundle.',
+  'A Brightdesk installation already exists; refusing to overwrite or remove it.',
+  'A Brightdesk installer receipt already exists; refusing to modify or forget it.',
+  'A previous macOS smoke-test temporary path already exists; refusing to reuse or remove it.'
 ];
 
 function safeMissingLibraries(log) {
@@ -60,6 +68,11 @@ function safeLinuxMessages(log) {
     if (match) result.push('Linux package ' + match[1] + ' failed with exit code ' + Number(match[2]) + '.');
   }
   return [...new Set(result)].slice(0, 5);
+}
+
+function safeMacMessages(log) {
+  const lines = new Set(String(log || '').split(/\r?\n/).map(line => line.trim()));
+  return MACOS_MESSAGES.filter(message => lines.has(message)).slice(0, 5);
 }
 
 function safeWindowsStage(log) {
@@ -104,6 +117,9 @@ function formatPrivateInstallerFailure({ platform, stage, exitCode, log = '' } =
     if (missing.length) lines.push('Missing system runtime libraries: ' + missing.join(', '));
     const messages = safeLinuxMessages(log);
     if (messages.length) lines.push('Result: ' + messages.join(' '));
+  } else if (platform === 'mac') {
+    const messages = safeMacMessages(log);
+    if (messages.length) lines.push('Result: ' + messages.join(' '));
   } else if (platform === 'win') {
     const messages = safeWindowsMessages(log);
     if (messages.length) lines.push('Result: ' + messages.join(' '));
@@ -130,4 +146,4 @@ if (require.main === module) {
   process.stdout.write(Buffer.from(safe, 'utf8').toString('base64'));
 }
 
-module.exports = { formatPrivateInstallerFailure, safeMissingLibraries, safeLinuxMessages, safeWindowsMessages, safeWindowsStage, hasMissingCommandDiagnostic, PLATFORMS, STAGES };
+module.exports = { formatPrivateInstallerFailure, safeMissingLibraries, safeLinuxMessages, safeMacMessages, safeWindowsMessages, safeWindowsStage, hasMissingCommandDiagnostic, PLATFORMS, STAGES };
