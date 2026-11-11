@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
-const { cleanFileName, parseCsv, parseTsv, ensureExtension, exportOfficeFile, openOfficeFile, validateProject } = require('../src/file-service');
+const { cleanFileName, parseCsv, parseTsv, ensureExtension, exportOfficeFile, openOfficeFile, validateProject, assertSheetDimensions } = require('../src/file-service');
 
 test('cleanFileName removes unsafe characters and limits length', () => {
   assert.equal(cleanFileName('budget: 2026/report?'), 'budget_ 2026_report_');
@@ -80,4 +80,88 @@ test('Brightdesk project import rejects malformed JSON with a clear error', asyn
     await fs.writeFile(filePath, '{not json', 'utf8');
     await assert.rejects(openOfficeFile(filePath), /not valid JSON/);
   } finally { await fs.rm(directory, { recursive: true, force: true }); }
+});
+
+test('text imports reject malformed UTF-8 rather than silently replacing bytes', async () => {
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'brightdesk-invalid-utf8-'));
+  const invalidText = Buffer.from([0x6e,0x61,0x6d,0x65,0x2c,0x76,0x61,0x6c,0x75,0x65,0x0a,0x41,0x6c,0x65,0x78,0x2c,0xc3,0x28]);
+  const invalidProject = Buffer.concat([
+    Buffer.from('{"docs":{"notes":{"text":"'),
+    Buffer.from([0xc3,0x28]),
+    Buffer.from('"}}}')
+  ]);
+  try {
+    for (const extension of ['.csv','.tsv','.txt','.md','.html']) {
+      const filePath = path.join(directory, 'broken' + extension);
+      await fs.writeFile(filePath, invalidText);
+      await assert.rejects(openOfficeFile(filePath), /not valid UTF-8 text/);
+    }
+    const projectPath = path.join(directory, 'broken.bdesk');
+    await fs.writeFile(projectPath, invalidProject);
+    await assert.rejects(openOfficeFile(projectPath), /not valid UTF-8 JSON/);
+  } finally {
+    await fs.rm(directory, { recursive: true, force: true });
+  }
+});
+
+test('CSV and TSV imports reject spreadsheets over the 250,000-cell limit', async () => {
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'brightdesk-large-sheet-'));
+  const columns = Array(250001).fill('x');
+  try {
+    for (const extension of ['.csv', '.tsv']) {
+      const row = Buffer.from(columns.join(extension === '.tsv' ? '\t' : ','));
+      const filePath = path.join(directory, 'large' + extension);
+      await fs.writeFile(filePath, row);
+      await assert.rejects(openOfficeFile(filePath), /250,000-cell limit/);
+    }
+  } finally {
+    await fs.rm(directory, { recursive: true, force: true });
+  }
+});
+
+test('TXT, Markdown and HTML imports enforce the 10 MB text limit', async () => {
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'brightdesk-large-text-'));
+  const oversizedText = Buffer.alloc(10 * 1024 * 1024 + 1, 0x61);
+  try {
+    for (const extension of ['.txt', '.md', '.html']) {
+      const filePath = path.join(directory, 'large' + extension);
+      await fs.writeFile(filePath, oversizedText);
+      await assert.rejects(openOfficeFile(filePath), /10 MB text limit/);
+    }
+  } finally {
+    await fs.rm(directory, { recursive: true, force: true });
+  }
+});
+
+test('CSV and TSV parsers stop as soon as the 250,000-cell limit is exceeded', () => {
+  const csv = Array(250001).fill('x').join(',');
+  const tsv = Array(250001).fill('x').join('\t');
+  assert.throws(() => parseCsv(csv), /250,000-cell limit/);
+  assert.throws(() => parseTsv(tsv), /250,000-cell limit/);
+});
+
+test('XLSX worksheet dimensions reject oversized cell grids before row conversion', () => {
+  assert.doesNotThrow(() => assertSheetDimensions(250000, 0));
+  assert.doesNotThrow(() => assertSheetDimensions(0, 250000));
+  assert.throws(() => assertSheetDimensions(250001, 0), /250,000-cell limit/);
+  assert.throws(() => assertSheetDimensions(0, 250001), /250,000-cell limit/);
+
+  assert.doesNotThrow(() => assertSheetDimensions(500, 500));
+  assert.doesNotThrow(() => assertSheetDimensions(0, 0));
+  assert.throws(() => assertSheetDimensions(500001, 1), /250,000-cell limit/);
+  assert.throws(() => assertSheetDimensions(501, 500), /250,000-cell limit/);
+});
+
+test('CSV and TSV parsers reject malformed quotes and preserve empty quoted cells', () => {
+  const cases = [
+    [parseCsv, 'Name,Note\nAlex,"hello"', [['Name','Note'], ['Alex','hello']]],
+    [parseTsv, 'Name\tNote\nAlex\t"hello"', [['Name','Note'], ['Alex','hello']]]
+  ];
+  for (const [parse, validInput, expected] of cases) {
+    assert.throws(() => parse('"unfinished'), /invalid quotation/);
+    assert.throws(() => parse('Alex"bad,value'), /invalid quotation/);
+    assert.throws(() => parse('"closed"trailing,value'), /invalid quotation/);
+    assert.deepEqual(parse(validInput), expected);
+    assert.deepEqual(parse('""'), [['']]);
+  }
 });

@@ -1,5 +1,6 @@
 const fs = require('node:fs/promises');
 const path = require('node:path');
+const { TextDecoder } = require('node:util');
 const appCatalog = require('./app-catalog');
 
 const MAX_PROJECT_BYTES = 50 * 1024 * 1024;
@@ -15,6 +16,48 @@ const EXCLUDED_APP_IDS = new Set(['teams', 'outlook', 'onedrive']);
  * the full desktop dependency set has been installed. Every package remains
  * declared in package.json for normal application installs and release builds.
  */
+
+function decodeUtf8(buffer, errorMessage) {
+  try {
+    return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(buffer);
+  } catch {
+    throw new Error(errorMessage);
+  }
+}
+
+function assertDocumentTextLimit(byteLength) {
+  if (byteLength > MAX_DOCUMENT_TEXT_BYTES) {
+    throw new Error('The imported document exceeds the 10 MB text limit.');
+  }
+}
+
+function assertSheetDimensions(rowCount, columnCount) {
+  if (!Number.isSafeInteger(rowCount) || !Number.isSafeInteger(columnCount) || rowCount < 0 || columnCount < 0) {
+    throw new Error('The imported spreadsheet has invalid worksheet dimensions.');
+  }
+  const boundedRows = Math.max(1, rowCount);
+  const boundedColumns = Math.max(1, columnCount);
+  if (boundedRows > Math.floor(MAX_SHEET_CELLS / boundedColumns)) {
+    throw new Error('The imported spreadsheet exceeds the 250,000-cell limit.');
+  }
+}
+
+function assertSheetCellLimit(rows) {
+  let cellCount = 0;
+  for (const row of rows) {
+    if (!Array.isArray(row)) continue;
+    cellCount += row.length;
+    if (cellCount > MAX_SHEET_CELLS) {
+      throw new Error('The imported spreadsheet exceeds the 250,000-cell limit.');
+    }
+  }
+}
+
+function assertPresentationSlideLimit(slideCount) {
+  if (slideCount > MAX_SLIDES) {
+    throw new Error('The imported presentation exceeds the 2,000-slide limit.');
+  }
+}
 
 function isPlainObject(value) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
@@ -72,18 +115,68 @@ function cleanFileName(value) {
   return String(value || 'Brightdesk file').replace(/[<>:"/\\|?*\x00-\x1F]/g, '_').slice(0, 120) || 'Brightdesk file';
 }
 function parseDelimited(text, delimiter) {
-  const rows = []; let row = [], cell = '', quoted = false;
+  const rows = [];
+  let row = [], cell = '', quoted = false, quoteClosed = false, fieldStarted = false, cellCount = 0;
+  const pushCell = () => {
+    cellCount++;
+    if (cellCount > MAX_SHEET_CELLS) {
+      throw new Error('The imported spreadsheet exceeds the 250,000-cell limit.');
+    }
+    row.push(cell);
+    cell = '';
+    quoteClosed = false;
+    fieldStarted = false;
+  };
+  const rejectMalformedQuotes = () => {
+    throw new Error('This delimited file contains invalid quotation marks.');
+  };
+
   for (let i = 0; i < text.length; i++) {
     const ch = text[i];
-    if (ch === '"' && quoted && text[i + 1] === '"') { cell += '"'; i++; }
-    else if (ch === '"') quoted = !quoted;
-    else if (ch === delimiter && !quoted) { row.push(cell); cell = ''; }
-    else if ((ch === '\n' || ch === '\r') && !quoted) {
+    const isNewline = ch === '\n' || ch === '\r';
+
+    if (quoted) {
+      if (ch === '"') {
+        if (text[i + 1] === '"') { cell += '"'; i++; }
+        else { quoted = false; quoteClosed = true; }
+      } else cell += ch;
+      continue;
+    }
+
+    if (quoteClosed) {
+      if (ch === delimiter) { pushCell(); continue; }
+      if (isNewline) {
+        if (ch === '\r' && text[i + 1] === '\n') i++;
+        pushCell();
+        rows.push(row);
+        row = [];
+        continue;
+      }
+      rejectMalformedQuotes();
+    }
+
+    if (ch === '"') {
+      if (fieldStarted) rejectMalformedQuotes();
+      quoted = true;
+      fieldStarted = true;
+    } else if (ch === delimiter) {
+      pushCell();
+    } else if (isNewline) {
       if (ch === '\r' && text[i + 1] === '\n') i++;
-      row.push(cell); rows.push(row); row = []; cell = '';
-    } else cell += ch;
+      pushCell();
+      rows.push(row);
+      row = [];
+    } else {
+      cell += ch;
+      fieldStarted = true;
+    }
   }
-  if (cell.length || row.length) { row.push(cell); rows.push(row); }
+
+  if (quoted) rejectMalformedQuotes();
+  if (fieldStarted || row.length) {
+    pushCell();
+    rows.push(row);
+  }
   return rows;
 }
 function parseCsv(text) { return parseDelimited(text, ','); }
@@ -117,6 +210,7 @@ async function openOfficeFile(filePath) {
   if (ext === '.docx') {
     const mammoth = require('mammoth');
     const result = await mammoth.convertToHtml({ buffer });
+    assertDocumentTextLimit(Buffer.byteLength(result.value, 'utf8'));
     return { kind: 'pages', title: path.basename(filePath, ext), html: result.value, warnings: result.messages.map(m => m.message) };
   }
   if (ext === '.xlsx' || ext === '.xlsm') {
@@ -124,6 +218,7 @@ async function openOfficeFile(filePath) {
     const workbook = new ExcelJS.Workbook(); await workbook.xlsx.load(buffer);
     const sheet = workbook.worksheets[0];
     if (!sheet) return { kind: 'sheets', title: path.basename(filePath, ext), cells: [[]] };
+    assertSheetDimensions(sheet.rowCount, sheet.columnCount);
     const rows = [];
     sheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
       rows[rowNumber - 1] = [];
@@ -131,11 +226,13 @@ async function openOfficeFile(filePath) {
         rows[rowNumber - 1][colNumber - 1] = cell.formula ? `=${cell.formula}` : (cell.value?.result ?? cell.value ?? '');
       });
     });
+    assertSheetCellLimit(rows);
     return { kind: 'sheets', title: path.basename(filePath, ext), cells: rows };
   }
   if (ext === '.csv' || ext === '.tsv') {
-    const text = buffer.toString('utf8').replace(/^\uFEFF/, '');
+    const text = decodeUtf8(buffer, 'This imported file is not valid UTF-8 text.').replace(/^\uFEFF/, '');
     const rows = ext === '.tsv' ? parseTsv(text) : parseCsv(text);
+    assertSheetCellLimit(rows);
     return { kind: 'sheets', title: path.basename(filePath, ext), cells: rows };
   }
   if (ext === '.pptx') {
@@ -146,6 +243,7 @@ async function openOfficeFile(filePath) {
     const totalSlideBytes = slideEntries.reduce((total, entry) => total + (entry._data?.uncompressedSize || 0), 0);
     if (totalSlideBytes > 50 * 1024 * 1024) throw new Error('The presentation contains too much uncompressed slide XML to import safely.');
     const names = Object.keys(zip.files).filter(n => /^ppt\/slides\/slide\d+\.xml$/.test(n)).sort((a,b) => Number(a.match(/slide(\d+)/)[1]) - Number(b.match(/slide(\d+)/)[1]));
+    assertPresentationSlideLimit(names.length);
     const parser = new XMLParser({ ignoreAttributes: true, removeNSPrefix: false });
     const slides = [];
     for (const name of names) {
@@ -156,11 +254,14 @@ async function openOfficeFile(filePath) {
     return { kind: 'slides', title: path.basename(filePath, ext), slides: slides.length ? slides : [{ title: 'Imported presentation', body: '' }] };
   }
   if (ext === '.txt' || ext === '.md' || ext === '.html') {
-    return { kind: ext === '.txt' ? 'notes' : 'pages', title: path.basename(filePath, ext), text: buffer.toString('utf8'), html: ext === '.html' ? buffer.toString('utf8') : undefined };
+    assertDocumentTextLimit(buffer.byteLength);
+    const text = decodeUtf8(buffer, 'This imported file is not valid UTF-8 text.');
+    return { kind: ext === '.txt' ? 'notes' : 'pages', title: path.basename(filePath, ext), text, html: ext === '.html' ? text : undefined };
   }
   if (ext === '.bdesk') {
+    const jsonText = decodeUtf8(buffer, 'This Brightdesk project file is not valid UTF-8 JSON.');
     let project;
-    try { project = JSON.parse(buffer.toString('utf8')); }
+    try { project = JSON.parse(jsonText); }
     catch { throw new Error('This Brightdesk project file is not valid JSON.'); }
     return validateProject(project);
   }
@@ -220,4 +321,4 @@ async function exportOfficeFile(payload, filePath) {
   if (kind === 'notes' && (ext === '.md' || ext === '.txt')) { await fs.writeFile(filePath, payload.text || '', 'utf8'); return; }
   throw new Error(`This export format is not available for ${kind}.`);
 }
-module.exports = { cleanFileName, parseCsv, parseTsv, ensureExtension, openOfficeFile, exportOfficeFile, validateProject };
+module.exports = { cleanFileName, parseCsv, parseTsv, ensureExtension, openOfficeFile, exportOfficeFile, validateProject, assertSheetDimensions };

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain, dialog, shell } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, dialog } = require('electron');
 const packageConfig = require('../package.json');
 const nativeEngine = require('./rust-engine');
 const path = require('node:path');
@@ -7,7 +7,6 @@ const fs = require('node:fs/promises');
 const { openOfficeFile, exportOfficeFile, cleanFileName, ensureExtension } = require('./file-service');
 const { BUILTIN_LANGUAGES, validateLanguagePack, getBuiltinLanguage } = require('./language-service');
 const { DictionaryService } = require('./dictionary-service');
-const { PRODUCT_SLUGS, createDesktopDownload } = require('./desktop-downloads');
 let mainWindow;
 let agreementWindow;
 let termsAccepted = false;
@@ -128,16 +127,6 @@ ipcMain.handle('terms:decline', event => {
 });
 ipcMain.handle('app:version', event => { if (!senderIsMain(event)) throw new Error('Invalid sender.'); return app.getVersion(); });
 
-ipcMain.handle('downloads:desktop-installer', async (event, productId) => {
-  if (!senderIsMain(event)) throw new Error('Invalid sender.');
-  const download = createDesktopDownload({
-    productId,
-    platform: process.platform,
-    version: packageConfig.version
-  });
-  await shell.openExternal(download.url);
-  return { ok: true, filename: download.filename };
-});
 
 function languagePackDirectory() {
   return path.join(app.getPath('userData'), 'language-packs');
@@ -254,10 +243,6 @@ ipcMain.handle('dictionaries:catalog', async event => {
   return catalogue.map(item => ({ ...item, installed: installedCodes.has(item.locale.toLowerCase()) }));
 });
 
-ipcMain.handle('dictionaries:install-catalog', async (event, id) => {
-  if (!senderIsMain(event)) throw new Error('Invalid sender.');
-  return dictionaryService.installCatalogueEntry(id);
-});
 
 ipcMain.handle('dictionaries:check', async (event, payload) => {
   if (!senderIsMain(event)) throw new Error('Invalid sender.');
