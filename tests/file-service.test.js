@@ -106,9 +106,10 @@ test('text imports reject malformed UTF-8 rather than silently replacing bytes',
 
 test('CSV and TSV imports reject spreadsheets over the 250,000-cell limit', async () => {
   const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'brightdesk-large-sheet-'));
-  const row = Buffer.from(Array(250001).fill('x').join(','));
+  const columns = Array(250001).fill('x');
   try {
     for (const extension of ['.csv', '.tsv']) {
+      const row = Buffer.from(columns.join(extension === '.tsv' ? '\t' : ','));
       const filePath = path.join(directory, 'large' + extension);
       await fs.writeFile(filePath, row);
       await assert.rejects(openOfficeFile(filePath), /250,000-cell limit/);
