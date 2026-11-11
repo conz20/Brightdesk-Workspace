@@ -166,13 +166,6 @@
 .sidebar.is-compact .app-icon-image, .sidebar.is-compact .manager-icon { width: 34px; height: 34px; flex: 0 0 34px; }
 .sidebar.is-compact .sidebar-toggle { top: 10px; right: calc(50% - 15px); }
 .sidebar.is-compact .sidebar-toggle svg { transform: rotate(180deg); }
-.sidebar.is-minimal { width: 0; min-width: 0; height: 0; padding: 0; border: 0; overflow: visible; }
-.sidebar.is-minimal .brand, .sidebar.is-minimal .section-label, .sidebar.is-minimal .nav, .sidebar.is-minimal .sidebar-divider, .sidebar.is-minimal .sidebar-bottom { display: none !important; }
-.sidebar.is-minimal .sidebar-toggle { position: fixed; top: 12px; left: 12px; right: auto; z-index: 1002; }
-.sidebar.is-open-mobile { position: fixed; inset: 0 auto 0 0; width: 232px; min-width: 232px; height: 100vh; padding: 27px 17px; z-index: 1001; overflow-y: auto; box-shadow: 12px 0 30px rgba(16, 30, 54, .22); }
-.sidebar.is-open-mobile .sidebar-toggle { position: absolute; top: 15px; left: auto; right: 12px; }
-.sidebar.is-open-mobile .sidebar-toggle svg { transform: rotate(180deg); }
-body.sidebar-mobile-open::before { content: ""; position: fixed; inset: 0; z-index: 1000; background: rgba(12, 23, 40, .36); }
 .sidebar .manager-icon { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-@media (max-width: 640px) { .sidebar, .sidebar.is-compact { width: 0; min-width: 0; height: 0; padding: 0; border: 0; overflow: visible; } }
+}
 @media (prefers-reduced-motion: reduce) { .sidebar, .sidebar-toggle svg { transition: none !important; } }
