@@ -6,27 +6,50 @@ param(
 $ErrorActionPreference = 'Stop'
 $releaseDir = Join-Path $ProjectDir 'release'
 $package = Get-Content -Raw (Join-Path $ProjectDir 'package.json') | ConvertFrom-Json
-$installerPath = Join-Path $releaseDir "Brightdesk-Setup-$($package.version)-x64.exe"
-$installDir = Join-Path $env:RUNNER_TEMP 'brightdesk-install-smoke'
+$productName = [string]$package.build.productName
+$artifactTemplate = [string]$package.build.win.artifactName
+if ([string]::IsNullOrWhiteSpace($productName) -or [string]::IsNullOrWhiteSpace($artifactTemplate)) {
+  throw 'The product manifest must define build.productName and build.win.artifactName.'
+}
 
+$installerName = $artifactTemplate.Replace('${version}', [string]$package.version).Replace('${arch}', 'x64').Replace('${ext}', 'exe').Replace('${productName}', $productName)
+if ($installerName -match '\$\{[^}]+\}') {
+  throw 'The Windows installer filename contains an unsupported unresolved template value.'
+}
+$installerPath = Join-Path $releaseDir $installerName
+
+$executableName = [string]$package.build.win.executableName
+if ([string]::IsNullOrWhiteSpace($executableName)) {
+  $executableName = [string]$package.build.executableName
+}
+if ([string]::IsNullOrWhiteSpace($executableName)) {
+  $executableName = $productName
+}
+
+$tempRoot = if ([string]::IsNullOrWhiteSpace($env:RUNNER_TEMP)) {
+  [System.IO.Path]::GetTempPath()
+} else {
+  $env:RUNNER_TEMP
+}
+$installDir = Join-Path $tempRoot ("brightdesk-install-smoke-" + [guid]::NewGuid().ToString('N'))
+if (Test-Path -LiteralPath $installDir) {
+  throw 'The unique Windows installer smoke-test directory unexpectedly already exists.'
+}
 if (-not (Test-Path -LiteralPath $installerPath -PathType Leaf)) {
   throw 'The expected Windows NSIS installer was not found.'
 }
 
+New-Item -ItemType Directory -Path $installDir | Out-Null
 try {
-  if (Test-Path -LiteralPath $installDir) {
-    Remove-Item -LiteralPath $installDir -Recurse -Force
-  }
-
   Write-Output 'Brightdesk Windows smoke test stage: installer execution.'
   $install = Start-Process -FilePath $installerPath -ArgumentList @('/S', "/D=$installDir") -Wait -PassThru
   if ($install.ExitCode -ne 0) {
     throw "The Windows installer exited with code $($install.ExitCode)."
   }
 
-  $appPath = Join-Path $installDir 'Brightdesk.exe'
+  $appPath = Join-Path $installDir "$executableName.exe"
   if (-not (Test-Path -LiteralPath $appPath -PathType Leaf)) {
-    throw 'The Windows installer did not install Brightdesk.exe.'
+    throw 'The Windows installer did not install the product executable.'
   }
   $nativeAddonPath = Join-Path $installDir 'resources\app.asar.unpacked\native\brightdesk_engine.node'
   if (-not (Test-Path -LiteralPath $nativeAddonPath -PathType Leaf)) {
@@ -62,10 +85,11 @@ try {
     }
   }
 
-  $uninstaller = Join-Path $installDir 'Uninstall Brightdesk.exe'
-  if (-not (Test-Path -LiteralPath $uninstaller -PathType Leaf)) {
-    throw 'The Windows installer did not create its uninstaller.'
+  $uninstallers = @(Get-ChildItem -LiteralPath $installDir -File -Filter 'Uninstall*.exe')
+  if ($uninstallers.Count -ne 1) {
+    throw 'The Windows installer did not create exactly one uninstaller.'
   }
+  $uninstaller = $uninstallers[0].FullName
 
   Write-Output 'Brightdesk Windows smoke test stage: uninstaller execution.'
   $remove = Start-Process -FilePath $uninstaller -ArgumentList '/S' -Wait -PassThru
