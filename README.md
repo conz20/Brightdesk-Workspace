@@ -30,7 +30,7 @@ The product follows the [Brightdesk visual and interaction standard](https://git
 
 ## Product navigation
 
-The left navigation is 232 px wide when expanded. It can be collapsed to a slim 76 px icon rail and expanded again with the navigation control. In the compact state, the original SVG icons remain visible and each item keeps its full accessible name and tooltip. At 641–1007 px the rail starts compact to preserve workspace room. At 640 px and below it becomes a menu button that opens the navigation over the workspace; at 1008 px and above it starts expanded. This control exists in individual product windows only. The Suite keeps its fixed 192 px labelled sidebar and has no expand/collapse option.
+The left navigation is 232 px wide when expanded. It can be collapsed to a slim 76 px icon rail and expanded again with the navigation control. In the compact state, the original SVG icons remain visible and each item keeps its full accessible name and tooltip. At 641–1007 px the rail starts compact to preserve workspace room; at 1008 px and above it starts expanded. This is responsive navigation within a desktop window only. Brightdesk supports Windows, macOS and Linux desktop editions; it has no mobile application, mobile edition, mobile navigation mode or mobile installer. This control exists in individual product windows only. The Suite keeps its fixed 192 px labelled sidebar and has no expand/collapse option.
 
 The interface preview remains design artwork, not a captured product screenshot. A real screenshot will be added only after the running desktop window has been launched and visually checked.
 
