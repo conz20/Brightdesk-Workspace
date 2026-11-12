@@ -304,8 +304,76 @@ function renderSlides() {
 function addSlide(){activeDoc().slides.push({title:`Slide ${activeDoc().slides.length+1}`,body:''});activeDoc().current=activeDoc().slides.length-1;renderSlides();renderToolbar();persist();}
 function duplicateSlide(){const d=activeDoc(),copy=clone(d.slides[d.current]);d.slides.splice(d.current+1,0,copy);d.current++;renderSlides();renderToolbar();persist();}
 function deleteSlide(){const d=activeDoc();if(d.slides.length===1){alert('A presentation needs at least one slide.');return;}d.slides.splice(d.current,1);d.current=Math.max(0,d.current-1);renderSlides();renderToolbar();persist();}
-function presentSlides(){const d=activeDoc();let i=d.current;const overlay=document.createElement('div');overlay.className='presentation-overlay';const slide=document.createElement('div');slide.className='presentation-slide';const title=document.createElement('h1'),body=document.createElement('p'),footer=document.createElement('div');footer.className='presentation-footer';footer.textContent='Click or press an arrow key to move · Esc to exit';slide.append(title,body,footer);overlay.append(slide);document.body.append(overlay);
-  const draw=()=>{title.textContent=d.slides[i].title;body.textContent=d.slides[i].body;};const key=(e)=>{if(e.key==='Escape'){overlay.remove();document.removeEventListener('keydown',key);}else if(e.key==='ArrowRight'){i=Math.min(d.slides.length-1,i+1);draw();}else if(e.key==='ArrowLeft'){i=Math.max(0,i-1);draw();}};overlay.addEventListener('click',()=>{i=Math.min(d.slides.length-1,i+1);draw();});document.addEventListener('keydown',key);draw();}
+function presentSlides() {
+  const d = activeDoc();
+  let i = d.current;
+  const overlay = document.createElement('div');
+  overlay.className = 'presentation-overlay bd-motion-overlay';
+  overlay.dataset.state = 'closed';
+
+  const slide = document.createElement('div');
+  slide.className = 'presentation-slide';
+  const title = document.createElement('h1');
+  const body = document.createElement('p');
+  const footer = document.createElement('div');
+  footer.className = 'presentation-footer';
+  footer.textContent = 'Click or press an arrow key to move · Esc to exit';
+  slide.append(title, body, footer);
+  overlay.append(slide);
+  document.body.append(overlay);
+
+  const draw = () => {
+    title.textContent = d.slides[i].title;
+    body.textContent = d.slides[i].body;
+  };
+
+  let closing = false;
+  const close = () => {
+    if (closing) return;
+    closing = true;
+    overlay.dataset.state = 'closed';
+    document.removeEventListener('keydown', key);
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      overlay.remove();
+      return;
+    }
+
+    const finish = event => {
+      if (event.target !== overlay || event.propertyName !== 'opacity') return;
+      overlay.removeEventListener('transitionend', finish);
+      overlay.remove();
+    };
+    overlay.addEventListener('transitionend', finish);
+    window.setTimeout(() => {
+      overlay.removeEventListener('transitionend', finish);
+      overlay.remove();
+    }, 240);
+  };
+
+  const key = event => {
+    if (event.key === 'Escape') {
+      close();
+    } else if (event.key === 'ArrowRight') {
+      i = Math.min(d.slides.length - 1, i + 1);
+      draw();
+    } else if (event.key === 'ArrowLeft') {
+      i = Math.max(0, i - 1);
+      draw();
+    }
+  };
+
+  requestAnimationFrame(() => {
+    if (!closing && overlay.isConnected) overlay.dataset.state = 'open';
+  });
+  overlay.addEventListener('click', () => {
+    if (closing || overlay.dataset.state !== 'open') return;
+    i = Math.min(d.slides.length - 1, i + 1);
+    draw();
+  });
+  document.addEventListener('keydown', key);
+  draw();
+}
 function todoTasks() { return Array.isArray(activeDoc().tasks) ? activeDoc().tasks : (activeDoc().tasks = []); }
 function saveTodoTasks() { persist(); $('todo-status').textContent = 'Saved on this device'; }
 function replaceTodoTask(id, patch) {
@@ -857,8 +925,43 @@ $('lists-rename').addEventListener('click',renameCurrentList);
 $('lists-delete').addEventListener('click',deleteCurrentList);
 $('lists-column-type').addEventListener('change',()=>{$('lists-column-options-wrap').hidden=$('lists-column-type').value!=='choice';});
 $('export-button').addEventListener('click',exportCurrent);$('open-button').addEventListener('click',openFile);$('save-project').addEventListener('click',saveProject);
-$('updates-button').addEventListener('click',async()=>{const msg=$('update-message');msg.hidden=false;msg.textContent=t('common.updateChecking');try{const r=await window.brightdesk.checkForUpdates();if(!r?.ok)msg.textContent=r?.message||'Update checks are not configured yet.';}catch(e){msg.textContent=`Update check failed: ${e.message}`;}});
-window.brightdesk.onUpdateState?.(updateState=>{const msg=$('update-message');msg.hidden=false;msg.textContent=updateState.message;if(updateState.status==='available'){msg.textContent=updateState.message;}if(updateState.status==='downloaded'){const button=document.createElement('button');button.className='text-button';button.textContent=t('common.restartInstall');button.onclick=()=>window.brightdesk.installUpdate();msg.append(' ',button);}});
+function setUpdateMessage(message, loading = false) {
+  const msg = $('update-message');
+  msg.hidden = false;
+  if (!loading) {
+    msg.textContent = message;
+    return;
+  }
+  const spinner = document.createElement('span');
+  spinner.className = 'bd-motion-spinner';
+  spinner.setAttribute('aria-hidden', 'true');
+  spinner.textContent = '◌';
+  msg.replaceChildren(spinner, document.createTextNode(' ' + message));
+}
+
+$('updates-button').addEventListener('click', async () => {
+  setUpdateMessage(t('common.updateChecking'), true);
+  try {
+    const result = await window.brightdesk.checkForUpdates();
+    if (!result?.ok) setUpdateMessage(result?.message || 'Update checks are not configured yet.');
+  } catch (error) {
+    setUpdateMessage(`Update check failed: ${error.message}`);
+  }
+});
+window.brightdesk.onUpdateState?.(updateState => {
+  const loading = updateState.status === 'checking' || updateState.status === 'downloading';
+  setUpdateMessage(updateState.message, loading);
+  if (updateState.status === 'available') {
+    setUpdateMessage(updateState.message);
+  }
+  if (updateState.status === 'downloaded') {
+    const button = document.createElement('button');
+    button.className = 'text-button';
+    button.textContent = t('common.restartInstall');
+    button.onclick = () => window.brightdesk.installUpdate();
+    $('update-message').append(' ', button);
+  }
+});
 loadLocal();$('platform').textContent=`Desktop app · ${window.brightdesk.platform}`;
 (async()=>{
   try {

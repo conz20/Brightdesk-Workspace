@@ -36,3 +36,56 @@ test('includes the shared motion primitives and reduced-motion safeguards', () =
   assert.ok(motion.includes('animation: none !important'));
   assert.ok(!motion.includes('transition: all'));
 });
+
+const app = fs.readFileSync(path.join(src, 'app.js'), 'utf8');
+
+test('visible product workspaces and manager views receive a shared entrance motion', () => {
+  for (const id of [
+    'workspace',
+    'todo-wrap',
+    'lists-wrap',
+    'forms-wrap',
+    'planner-wrap',
+    'database-wrap',
+    'workspace-app-wrap',
+    'app-manager',
+    'language-manager'
+  ]) assert.ok(motion.includes('#' + id + ':not([hidden])'), 'missing motion for #' + id);
+});
+
+test('native disclosure panels animate their newly visible content', () => {
+  assert.ok(motion.includes('details[open] > :not(summary)'));
+});
+
+test('buttons use the shared transform feedback without ignoring reduced motion', () => {
+  assert.ok(motion.includes('button:not(.nav):not(:disabled)'));
+  assert.ok(motion.includes('transform var(--bd-motion-duration-fast, 120ms) var(--bd-motion-ease-standard, ease)'));
+  assert.ok(motion.includes('button:not(.nav):not(:disabled):hover'));
+  assert.ok(motion.includes('button:not(.nav):not(:disabled):active'));
+});
+
+test('update checks expose a loading spinner only while checking or downloading', () => {
+  assert.ok(app.includes('function setUpdateMessage(message, loading = false)'));
+  assert.ok(app.includes("spinner.className = 'bd-motion-spinner'"));
+  assert.ok(app.includes("updateState.status === 'checking' || updateState.status === 'downloading'"));
+  assert.ok(html.includes('id="update-message" role="status"'));
+});
+
+test('presentation mode uses the shared overlay state and closes accessibly', () => {
+  assert.ok(app.includes("overlay.className = 'presentation-overlay bd-motion-overlay'"));
+  assert.ok(app.includes("overlay.dataset.state = 'closed'"));
+  assert.ok(app.includes("overlay.dataset.state = 'open'"));
+  assert.ok(app.includes('requestAnimationFrame'));
+  assert.ok(app.includes("window.matchMedia('(prefers-reduced-motion: reduce)')"));
+  assert.ok(app.includes("overlay.addEventListener('transitionend', finish)"));
+  assert.ok(app.includes("document.removeEventListener('keydown', key)"));
+});
+
+test('reduced-motion preference also removes existing navigation and app-card hover movement', () => {
+  assert.ok(motion.includes('.nav:hover,\n  .app-card:hover {\n    transform: none !important;'));
+});
+
+test('the product renderer remains valid JavaScript after motion integration', () => {
+  const vm = require('node:vm');
+  assert.doesNotThrow(() => new vm.Script(app));
+});
