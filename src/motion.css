@@ -172,3 +172,11 @@ button:not(.nav):not(:disabled):active {
     transform: none !important;
   }
 }
+
+
+@media (prefers-reduced-motion: reduce) {
+  .nav:hover,
+  .app-card:hover {
+    transform: none !important;
+  }
+}
