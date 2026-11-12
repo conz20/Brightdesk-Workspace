@@ -101,3 +101,9 @@ The product build configuration defines desktop packages for all three supported
 The private installer smoke-test scripts are shared verification tooling. Their regression tests check that a test run uses product-specific names and unique temporary locations, refuses to overwrite an existing macOS installation or package receipt, and does not remove a pre-existing Linux package. These source and regression checks are not proof that a native installer has been executed on each operating system.
 
 A platform is complete only after the matching current-version artifacts and SHA-256 records are verified, followed by actual install, first launch, upgrade, repair, uninstall and user-data-preservation checks on that platform. Wine compatibility checks must not be described as native Windows certification. No unverified platform is described as release-ready.
+
+## Printing
+
+Brightdesk Workspace uses the shared local-first Printing adapter. The **Print** action lists configured operating-system printer queues and opens the visible system print dialog. **Printer settings** opens the operating system's own printer setup screen. Brightdesk does not silently create printer queues, install drivers or upload document content. A successful submission means the operating system accepted the job; it does not confirm that a physical page printed.
+
+The dependency-free adapter snapshot is kept in `src/printing-package/` and records its canonical source commit in `UPSTREAM.json`. Virtual-printer tests cover queue listing, capability reporting, accepted submissions, removed queues and spooler rejection without a physical printer. Native macOS and Windows network-discovery helpers are not yet built and bundled by this product's packaging workflow; Linux discovery depends on the host's `ippfind` utility. Configured system queues and the visible print dialog are the current supported integration path.
