@@ -809,6 +809,8 @@ function render() {
   $('workspace').hidden = manager || languages; $('welcome').hidden = manager || languages || ['todo','lists','forms','planner','database','loop'].includes(state.app);
   $('app-title').textContent = manager ? t('sidebar.getApps') : (languages ? t('language.title') : (catalog.find(item => item.id === state.app)?.name || state.app));
   $('top-actions').hidden = manager || languages;
+  $('print-button').hidden = manager || languages;
+  $('printer-settings-button').hidden = manager || languages;
   if (manager) {
     $('save-status').textContent = t('manager.manageTitle'); renderAppManager();
   } else if (languages) {
@@ -874,6 +876,18 @@ function exportPayload(){
 }
 async function exportCurrent(){try{const result=await window.brightdesk.exportFile(exportPayload());if(result?.canceled)return;setStatus('Exported successfully');}catch(error){alert(`Export failed: ${error.message}`);}}
 async function exportPdf(){try{const result=await window.brightdesk.exportPdf({title:$('doc-title').value});if(!result?.canceled)setStatus('PDF exported');}catch(error){alert(`PDF export failed: ${error.message}`);}}
+async function printCurrent() {
+  try {
+    const printers = await window.brightdesk.printing.listPrinters();
+    if (!Array.isArray(printers) || printers.length === 0) { setStatus('No printer is available yet. Use Printer settings to add one, then try again.'); return; }
+    const result = await window.brightdesk.printing.print({ printBackground: true });
+    setStatus(result?.status === 'submitted' ? 'Your computer accepted the print request.' : 'The print request was not submitted.');
+  } catch (error) { setStatus(error?.message || 'Brightdesk could not start printing.'); }
+}
+async function openPrinterSettings() {
+  try { await window.brightdesk.printing.openPrinterSettings(); setStatus('Printer settings opened. Return to Brightdesk and choose Print.'); }
+  catch (error) { setStatus(error?.message || 'Brightdesk could not open printer settings.'); }
+}
 function importProject(data){
   if (launchAppId && data?.kind && data.kind !== launchAppId) throw new Error(`This Brightdesk ${appLabel(launchAppId)} installation opens ${appLabel(launchAppId)} files only.`);
   if(data?.docs && typeof data.docs === 'object'){
@@ -925,6 +939,8 @@ $('lists-rename').addEventListener('click',renameCurrentList);
 $('lists-delete').addEventListener('click',deleteCurrentList);
 $('lists-column-type').addEventListener('change',()=>{$('lists-column-options-wrap').hidden=$('lists-column-type').value!=='choice';});
 $('export-button').addEventListener('click',exportCurrent);$('open-button').addEventListener('click',openFile);$('save-project').addEventListener('click',saveProject);
+$('print-button').addEventListener('click', printCurrent);
+$('printer-settings-button').addEventListener('click', openPrinterSettings);
 function setUpdateMessage(message, loading = false) {
   const msg = $('update-message');
   msg.hidden = false;
