@@ -60,8 +60,8 @@ test('native disclosure panels animate their newly visible content', () => {
 test('buttons use the shared transform feedback without ignoring reduced motion', () => {
   assert.ok(motion.includes('button:not(.nav):not(:disabled)'));
   assert.ok(motion.includes('transform var(--bd-motion-duration-fast, 120ms) var(--bd-motion-ease-standard, ease)'));
-  assert.ok(motion.includes('button:not(:disabled):hover'));
-  assert.ok(motion.includes('button:not(:disabled):active'));
+  assert.ok(motion.includes('button:not(.nav):not(:disabled):hover'));
+  assert.ok(motion.includes('button:not(.nav):not(:disabled):active'));
 });
 
 test('update checks expose a loading spinner only while checking or downloading', () => {
