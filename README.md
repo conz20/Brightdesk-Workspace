@@ -101,3 +101,10 @@ The product build configuration defines desktop packages for all three supported
 The private installer smoke-test scripts are shared verification tooling. Their regression tests check that a test run uses product-specific names and unique temporary locations, refuses to overwrite an existing macOS installation or package receipt, and does not remove a pre-existing Linux package. These source and regression checks are not proof that a native installer has been executed on each operating system.
 
 A platform is complete only after the matching current-version artifacts and SHA-256 records are verified, followed by actual install, first launch, upgrade, repair, uninstall and user-data-preservation checks on that platform. Wine compatibility checks must not be described as native Windows certification. No unverified platform is described as release-ready.
+
+
+## Shared offline JSON storage
+
+This product bundles the Brightdesk Common-Libs JSON storage helper locally at `src/vendor/brightdesk-common-libs/json-storage.js`. Existing `brightdesk-docs-v3` and `brightdesk-app-setup-v1` storage keys are retained, and the older `brightdesk-docs-v2` key remains readable as a fallback without being deleted. Exact upstream source provenance is recorded in `src/vendor/brightdesk-common-libs/UPSTREAM.json`.
+
+The helper loads from the installed product before `src/app.js`. It does not download from GitHub, a package registry or another network service at runtime. Normal local documents and settings continue to work offline.

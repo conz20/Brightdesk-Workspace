@@ -41,19 +41,21 @@ const state = {
 };
 const editor = $('editor'), sheetWrap = $('sheet-wrap'), slideWrap = $('slide-wrap'), notesWrap = $('notes-wrap');
 const pageLayout = window.BrightdeskPageLayout;
+const commonJsonStorage = window.BrightdeskCommonLibs;
+if (!commonJsonStorage) throw new Error('Brightdesk common storage helper was not loaded.');
 
-function clone(value) { return JSON.parse(JSON.stringify(value)); }
+function clone(value) { return commonJsonStorage.cloneJsonValue(value); }
 function activeDoc() { return state.docs[state.app]; }
 function setStatus(message) { $('save-status').textContent = message; }
 function persist() {
-  try { localStorage.setItem('brightdesk-docs-v3', JSON.stringify(state.docs)); setStatus('Saved on this device'); }
+  try { commonJsonStorage.writeJsonValue(localStorage, 'brightdesk-docs-v3', state.docs); setStatus('Saved on this device'); }
   catch (error) { setStatus('Could not save locally'); console.error(error); }
 }
 function loadLocal() {
   try {
-    const stored = JSON.parse(localStorage.getItem('brightdesk-docs-v3') || localStorage.getItem('brightdesk-docs-v2') || 'null');
+    const stored = commonJsonStorage.readJsonValue(localStorage, 'brightdesk-docs-v3', { fallbackKeys: ['brightdesk-docs-v2'], fallbackValue: null });
     if (stored && typeof stored === 'object') state.docs = { ...clone(defaults), ...stored };
-    const appSetup = JSON.parse(localStorage.getItem('brightdesk-app-setup-v1') || 'null');
+    const appSetup = commonJsonStorage.readJsonValue(localStorage, 'brightdesk-app-setup-v1', { fallbackValue: null });
     if (appSetup && Array.isArray(appSetup.installedApps)) {
       state.installedApps = launchAppId ? [launchAppId] : appSetup.installedApps.filter(id => installableCatalog.some(item => item.id === id));
       state.setupComplete = launchAppId ? true : appSetup.setupComplete === true && state.installedApps.length > 0;
@@ -72,7 +74,7 @@ function loadLocal() {
   } catch (error) { console.warn('Local project or app settings could not be read.', error); state.view = 'manager'; }
 }
 function saveAppSetup() {
-  localStorage.setItem('brightdesk-app-setup-v1', JSON.stringify({ installedApps: state.installedApps, setupComplete: state.setupComplete }));
+  commonJsonStorage.writeJsonValue(localStorage, 'brightdesk-app-setup-v1', { installedApps: state.installedApps, setupComplete: state.setupComplete });
 }
 function installedApp(id) { return state.installedApps.includes(id) || ['todo','lists','forms','planner','database','loop'].includes(id); }
 function appLabel(id) { return catalog.find(item => item.id === id)?.name || id; }
