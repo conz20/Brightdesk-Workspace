@@ -1,0 +1,103 @@
+/* Shared Brightdesk motion primitives.
+   Load after the product design tokens. Classes are opt-in; application states stay product-owned. */
+
+.bd-motion-surface {
+  transition:
+    background-color var(--bd-motion-duration-fast, 120ms) var(--bd-motion-ease-standard, ease),
+    border-color var(--bd-motion-duration-fast, 120ms) var(--bd-motion-ease-standard, ease),
+    box-shadow var(--bd-motion-duration-normal, 180ms) var(--bd-motion-ease-standard, ease),
+    opacity var(--bd-motion-duration-normal, 180ms) var(--bd-motion-ease-standard, ease),
+    transform var(--bd-motion-duration-normal, 180ms) var(--bd-motion-ease-standard, ease);
+}
+
+.bd-motion-interactive {
+  transition:
+    background-color var(--bd-motion-duration-fast, 120ms) var(--bd-motion-ease-standard, ease),
+    border-color var(--bd-motion-duration-fast, 120ms) var(--bd-motion-ease-standard, ease),
+    box-shadow var(--bd-motion-duration-fast, 120ms) var(--bd-motion-ease-standard, ease),
+    color var(--bd-motion-duration-fast, 120ms) var(--bd-motion-ease-standard, ease),
+    transform var(--bd-motion-duration-fast, 120ms) var(--bd-motion-ease-standard, ease);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .bd-motion-interactive:hover { transform: translateY(-1px); }
+}
+
+.bd-motion-interactive:active { transform: translateY(0) scale(.99); }
+
+.bd-motion-fade {
+  opacity: 1;
+  transition: opacity var(--bd-motion-duration-normal, 180ms) var(--bd-motion-ease-standard, ease);
+}
+
+.bd-motion-fade[data-state="closed"] { opacity: 0; }
+
+.bd-motion-slide {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity var(--bd-motion-duration-normal, 180ms) var(--bd-motion-ease-enter, ease),
+    transform var(--bd-motion-duration-normal, 180ms) var(--bd-motion-ease-enter, ease);
+}
+
+.bd-motion-slide[data-state="closed"] {
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+}
+
+.bd-motion-overlay {
+  opacity: 0;
+  transform: translateY(6px) scale(.985);
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity var(--bd-motion-duration-normal, 180ms) var(--bd-motion-ease-standard, ease),
+    transform var(--bd-motion-duration-normal, 180ms) var(--bd-motion-ease-enter, ease),
+    visibility 0s linear var(--bd-motion-duration-normal, 180ms);
+}
+
+.bd-motion-overlay[data-state="open"] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s;
+}
+
+.bd-motion-progress {
+  transition: width var(--bd-motion-duration-normal, 180ms) var(--bd-motion-ease-standard, ease);
+}
+
+.bd-motion-spinner {
+  display: inline-block;
+  transform-origin: center;
+  animation: bd-motion-spin var(--bd-motion-duration-spinner, 900ms) linear infinite;
+}
+
+@keyframes bd-motion-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bd-motion-surface,
+  .bd-motion-interactive,
+  .bd-motion-fade,
+  .bd-motion-slide,
+  .bd-motion-overlay,
+  .bd-motion-progress {
+    transition: none !important;
+  }
+
+  .bd-motion-interactive:hover,
+  .bd-motion-interactive:active,
+  .bd-motion-slide,
+  .bd-motion-slide[data-state="closed"],
+  .bd-motion-overlay,
+  .bd-motion-overlay[data-state="open"],
+  .bd-motion-spinner {
+    transform: none !important;
+  }
+
+  .bd-motion-spinner { animation: none !important; }
+}
