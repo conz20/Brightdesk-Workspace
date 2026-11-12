@@ -80,3 +80,9 @@ test('presentation mode uses the shared overlay state and closes accessibly', ()
   assert.ok(app.includes("overlay.addEventListener('transitionend', finish)"));
   assert.ok(app.includes("document.removeEventListener('keydown', key)"));
 });
+
+test('reduced-motion preference also removes existing navigation and app-card hover movement', () => {
+  assert.ok(motion.includes('.nav:hover'));
+  assert.ok(motion.includes('.app-card:hover'));
+  assert.ok(motion.includes('transform: none !important'));
+});
