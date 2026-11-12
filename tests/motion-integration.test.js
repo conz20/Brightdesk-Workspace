@@ -82,7 +82,10 @@ test('presentation mode uses the shared overlay state and closes accessibly', ()
 });
 
 test('reduced-motion preference also removes existing navigation and app-card hover movement', () => {
-  assert.ok(motion.includes('.nav:hover'));
-  assert.ok(motion.includes('.app-card:hover'));
-  assert.ok(motion.includes('transform: none !important'));
+  assert.ok(motion.includes('.nav:hover,\n  .app-card:hover {\n    transform: none !important;'));
+});
+
+test('the product renderer remains valid JavaScript after motion integration', () => {
+  const vm = require('node:vm');
+  assert.doesNotThrow(() => new vm.Script(app));
 });
