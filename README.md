@@ -88,7 +88,7 @@ Brightdesk Workspace uses the shared, dependency-free Brightdesk Printing adapte
 
 Native helpers are built after the Rust engine and unpacked outside ASAR alongside it. Brightdesk does not silently create queues, pair devices, install drivers or upload documents. Submission acceptance is not proof of physical printing; virtual-printer tests do not replace real-printer checks.
 
-**Customer-facing UI boundary:** the renderer currently connects only queue listing, Print and Printer settings. Network discovery, user-approved WSD pairing and capability lookup are exposed through protected IPC/preload APIs but are not wired to a customer-facing screen. Users must add the printer through operating-system settings before it becomes a usable queue.
+**Customer-facing UI boundary:** the renderer currently connects only queue listing, Print and Printer settings. Network discovery, user-approved WSD pairing and capability lookup are exposed through protected IPC/preload APIs but are not wired to a customer-facing screen. Users must add the printer through operating-system settings before it becomes a usable queue. The Windows WSD regression test also checks that a previously selected opaque printer ID remains pairable after a subsequent discovery refresh.
 
 ## Documentation freshness
 
