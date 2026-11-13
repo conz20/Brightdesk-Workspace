@@ -78,10 +78,13 @@ See [docs/DESIGN_BRIEF.md](docs/DESIGN_BRIEF.md) for the screen designs, navigat
 
 ## Printing
 
-Brightdesk Workspace uses the shared local-first Printing adapter. The **Print** action lists configured operating-system printer queues and opens the visible system print dialog. **Printer settings** opens the operating system's own printer setup screen. Brightdesk does not silently create printer queues, install drivers or upload document content. A successful submission means the operating system accepted the job; it does not confirm that a physical page printed.
+Brightdesk Workspace uses the shared, dependency-free Brightdesk Printing adapter. Print checks configured operating-system printer queues and opens the visible print dialog; Printer settings opens the OS setup screen.
 
-The dependency-free adapter snapshot is kept in `src/printing-package/` and records its canonical source commit in `UPSTREAM.json`. Native macOS and Windows network-discovery helpers are not yet built and bundled by this product's packaging workflow; Linux discovery depends on the host's `ippfind` utility. Configured system queues and the visible print dialog are the current supported integration path.
+- **macOS:** builds a universal Bonjour/IPP discovery helper for Apple Silicon and Intel, with Bonjour and local-network Info.plist metadata.
+- **Windows:** builds the IPP/WSD discovery helper using Visual Studio C++ Build Tools and the Windows SDK.
+- **Linux:** uses configured queues via Electron and the host CUPS `ippfind` utility for network discovery.
 
+Native helpers are built after the Rust engine and unpacked outside ASAR alongside it. Brightdesk does not silently create queues, pair devices, install drivers or upload documents. Submission acceptance is not proof of physical printing; virtual-printer tests do not replace real-printer checks.
 ## Documentation freshness
 
 The root README is maintained alongside the product, not as an end-of-project task. Every pull request that changes application code, tests, UI, design assets, screenshots, icons, configuration, dependencies, packaging, or build/release workflows must also update this README in the same pull request. Keep feature status, screenshots and visual references, application icons, setup/build instructions, platform compatibility, and repository links aligned with the latest verified implementation. Describe planned or untested functionality as planned, never as completed. The **README freshness** GitHub Actions check requires a root `README.md` update whenever a pull request or direct push to `main` changes a non-Markdown file; a passing check confirms inclusion, while reviewers remain responsible for checking factual accuracy and current visuals.
