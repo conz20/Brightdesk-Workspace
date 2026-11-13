@@ -85,6 +85,9 @@ Brightdesk Workspace uses the shared, dependency-free Brightdesk Printing adapte
 - **Linux:** uses configured queues via Electron and the host CUPS `ippfind` utility for network discovery.
 
 Native helpers are built after the Rust engine and unpacked outside ASAR alongside it. Brightdesk does not silently create queues, pair devices, install drivers or upload documents. Submission acceptance is not proof of physical printing; virtual-printer tests do not replace real-printer checks.
+
+**Customer-facing UI boundary:** the renderer currently connects only queue listing, Print and Printer settings. Network discovery, user-approved WSD pairing and capability lookup are exposed through protected IPC/preload APIs but are not wired to a customer-facing screen. Users must add the printer through operating-system settings before it becomes a usable queue.
+
 ## Documentation freshness
 
 The root README is maintained alongside the product, not as an end-of-project task. Every pull request that changes application code, tests, UI, design assets, screenshots, icons, configuration, dependencies, packaging, or build/release workflows must also update this README in the same pull request. Keep feature status, screenshots and visual references, application icons, setup/build instructions, platform compatibility, and repository links aligned with the latest verified implementation. Describe planned or untested functionality as planned, never as completed. The **README freshness** GitHub Actions check requires a root `README.md` update whenever a pull request or direct push to `main` changes a non-Markdown file; a passing check confirms inclusion, while reviewers remain responsible for checking factual accuracy and current visuals.
