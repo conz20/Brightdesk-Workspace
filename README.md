@@ -108,3 +108,8 @@ A platform is complete only after the matching current-version artifacts and SHA
 This product bundles the Brightdesk Common-Libs JSON storage helper locally at `src/vendor/brightdesk-common-libs/json-storage.js`. Existing `brightdesk-docs-v3` and `brightdesk-app-setup-v1` storage keys are retained, and the older `brightdesk-docs-v2` key remains readable as a fallback without being deleted. Exact upstream source provenance is recorded in `src/vendor/brightdesk-common-libs/UPSTREAM.json`.
 
 The helper loads from the installed product before `src/app.js`. It does not download from GitHub, a package registry or another network service at runtime. Normal local documents and settings continue to work offline.
+
+
+## Customer Help
+
+The desktop header includes a **Help** link. It opens the Brightdesk Workspace customer guide in the customer's normal browser. The customer help website is not yet published, so this link is not ready for customer release. Brightdesk remains usable offline; no document or product data is sent when Help is opened.
