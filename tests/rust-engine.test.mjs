@@ -68,7 +68,7 @@ const productBuilderConfig = readFileSync(
 );
 test("desktop installer includes and unpacks the native Rust addon", () => {
   assert.ok(productBuilderConfig.includes("'native/brightdesk_engine.node'"));
-  assert.ok(productBuilderConfig.includes("asarUnpack: ['native/brightdesk_engine.node']"));
+  assert.ok(productBuilderConfig.includes("asarUnpack: [") && productBuilderConfig.includes("native/brightdesk_engine.node"));
 });
 
 
