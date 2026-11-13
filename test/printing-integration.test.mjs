@@ -22,7 +22,7 @@ test("native Mac and Windows helper sources are included and selected by platfor
  const native=read("scripts/build-native.js"),builder=read("scripts/build-printing-native.js"),mac=read("src/printing-package/tools/build-macos-printer-discovery.sh");
  for(const f of ["src/printing-package/native/macos/ipp-printer-discovery.swift","src/printing-package/native/windows/ipp-printer-discovery.cpp","src/printing-package/tools/build-macos-printer-discovery.sh","src/printing-package/tools/build-windows-printer-discovery.ps1"])assert.ok(fs.statSync(path.join(process.cwd(),f)).isFile(),f);
  assert.ok(native.includes("build-printing-native.js"));assert.match(builder,/process\.platform/);
- assert.match(mac,/arm64-apple-macosx/);assert.match(mac,/x86_64-apple-macosx/);assert.match(mac,/lipo -create/);assert.match(mac,/-verify_arch arm64 x86_64/);
+ assert.match(mac,/arm64-apple-macosx/);assert.match(mac,/x86_64-apple-macosx/);assert.match(mac,/lipo -create/);assert.ok(mac.includes('lipo "$OUTPUT" -verify_arch arm64 x86_64'));
 });
 test("Workspace packages printer helpers and local-network metadata without losing Rust engine",()=>{
  const pkg=JSON.parse(read("package.json"));
