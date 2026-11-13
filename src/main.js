@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, dialog, shell } = require('electron');
 const packageConfig = require('../package.json');
 const nativeEngine = require('./rust-engine');
 const path = require('node:path');
@@ -27,6 +27,14 @@ if (selectedProductId && !supportedProducts.has(selectedProductId)) {
 }
 
 function sendUpdateState(state) { if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send('updates:state', state); }
+function openBrightdeskHelp(url) {
+  try {
+    const target = new URL(url);
+    if (target.origin !== 'https://conz20.github.io' || !target.pathname.startsWith('/Brightdesk-Wiki/')) return;
+    void shell.openExternal(target.href).catch(() => {});
+  } catch {}
+}
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1440, height: 920, minWidth: 980, minHeight: 680,
@@ -34,7 +42,7 @@ function createWindow() {
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false, sandbox: true, additionalArguments: selectedProductId ? [`--brightdesk-app=${selectedProductId}`] : [] }
   });
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
-  mainWindow.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => { openBrightdeskHelp(url); return { action: 'deny' }; });
   mainWindow.webContents.on('will-navigate', event => event.preventDefault());
   mainWindow.on('focus', () => { if (autoUpdater) checkForUpdates({ quiet: true }); });
 }
