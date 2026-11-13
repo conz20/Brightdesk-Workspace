@@ -71,14 +71,17 @@ test("prepares a content-only print document for every Brightdesk product", () =
 });
 
 
-test("Brightdesk Forms includes the preview and response panels required for printable forms", () => {
+test("the current Forms view exposes its available printable question content", () => {
   const html = read("src/index.html");
+  const app = read("src/app.js");
   for (const id of [
+    "forms-wrap",
     "forms-questions-panel",
-    "forms-preview-panel",
-    "forms-response-form",
-    "forms-responses-panel",
-    "forms-response-list",
-    "forms-status"
+    "forms-title",
+    "forms-description",
+    "forms-question-list",
+    "forms-add-question-form"
   ]) assert.match(html, new RegExp(`id="${id}"`));
+  assert.match(app, /forms:\s*"forms-wrap"/);
+  assert.match(app, /createBrightdeskPrintDocument/);
 });
