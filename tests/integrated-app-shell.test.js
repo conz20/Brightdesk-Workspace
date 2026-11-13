@@ -13,17 +13,22 @@ test('the fixed product catalogue remains exactly ten approved apps',()=>{assert
 test('all ten approved apps are available in the integrated suite',()=>{assert.ok(catalog.every(x=>x.availability==='available'),'every approved app must be marked available once its implementation is integrated');});
 test('the app shell routes each app away from the generic editor',()=>{for(const id of ['todo','lists','forms','planner','database','loop'])assert.ok(app.includes("state.app === '"+id+"'")||app.includes("state.app==='")+id+"'",id+' routing');});
 
-test('provides a safe external link to Brightdesk Help',()=>{
+test('provides a safe external link to Brightdesk Help from the sidebar',()=>{
   const helpUrl='https://conz20.github.io/Brightdesk-Wiki/products/workspace.html';
   const pageHtml=require('node:fs').readFileSync(require('node:path').join(__dirname,'..','src','index.html'),'utf8');
   const mainSource=require('node:fs').readFileSync(require('node:path').join(__dirname,'..','src','main.js'),'utf8');
-  const start=pageHtml.indexOf('<a class="secondary help-link" id="help-link"');
-  const end=pageHtml.indexOf('>Help</a>',start);
-  assert.notEqual(start,-1,'Help link is present in the product header');
-  assert.notEqual(end,-1,'Help link has a visible label');
-  const link=pageHtml.slice(start,end+9);
-  assert.ok(link.includes('href="'+helpUrl+'"'),'Help opens the product guide');
+  const sidebarStart=pageHtml.indexOf('<aside class="sidebar">');
+  const sidebarEnd=pageHtml.indexOf('</aside>',sidebarStart);
+  const linkStart=pageHtml.indexOf('<a class="nav help-nav" id="help-link"',sidebarStart);
+  const linkEnd=pageHtml.indexOf('</a>',linkStart);
+  assert.notEqual(sidebarStart,-1,'application sidebar exists');
+  assert.ok(linkStart>sidebarStart&&linkStart<sidebarEnd,'Help is in the persistent application sidebar');
+  assert.notEqual(linkEnd,-1,'Help link is complete');
+  const link=pageHtml.slice(linkStart,linkEnd+4);
+  assert.ok(link.includes('href="'+helpUrl+'"'),'Help opens the matching product guide');
   assert.ok(link.includes('target="_blank"')&&link.includes('rel="noopener noreferrer"'),'Help opens safely outside the product');
+  assert.ok(link.includes('<b>Help</b>')&&link.includes('Guides and how-to'),'Help has a discreet, clear label');
+  assert.ok(!pageHtml.slice(pageHtml.indexOf('<header class="topbar">'),pageHtml.indexOf('</header>')).includes('id="help-link"'),'Help is not duplicated in the top bar');
   assert.ok(mainSource.includes("target.origin !== 'https://conz20.github.io'"),'external navigation is host-restricted');
   assert.ok(mainSource.includes("target.pathname.startsWith('/Brightdesk-Wiki/')"),'external navigation is path-restricted');
   assert.ok(mainSource.includes('shell.openExternal(target.href)'),'approved Help navigation opens in the system browser');
