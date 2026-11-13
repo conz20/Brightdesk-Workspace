@@ -78,6 +78,8 @@ See [docs/DESIGN_BRIEF.md](docs/DESIGN_BRIEF.md) for the screen designs, navigat
 
 ## Printing
 
+Microsoft workflow comparison and known gaps: [Brightdesk Printing Compatibility Matrix](https://github.com/conz20/Brightdesk-suite/blob/feat/printing-suite-integration-2026-11-13/docs/PRINTING-COMPATIBILITY.md).
+
 Brightdesk Workspace uses the shared, dependency-free Brightdesk Printing adapter. Print checks configured operating-system printer queues and opens the visible print dialog; Printer settings opens the OS setup screen.
 
 - **macOS:** builds a universal Bonjour/IPP discovery helper for Apple Silicon and Intel, with Bonjour and local-network Info.plist metadata.
