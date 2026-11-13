@@ -61,4 +61,6 @@ if (process.platform === 'darwin') {
   fs.copyFileSync(library, destination);
 }
 
+run(process.execPath, [path.join(__dirname, 'build-printing-native.js')]);
+
 console.log('Built Brightdesk universal/native Node-API module:', destination);
