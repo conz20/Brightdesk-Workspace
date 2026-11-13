@@ -19,8 +19,9 @@ test('product UI does not offer separate desktop installer downloads', () => {
 test('renderer bridge and main process do not expose external installer downloads', () => {
   assert.doesNotMatch(preload, /downloadDesktopInstaller|downloadStandaloneApp|downloads:(desktop-installer|standalone-app)/);
   assert.doesNotMatch(main, /downloads:(desktop-installer|standalone-app)/);
-  assert.match(main, /target\.origin !== 'https:\/\/conz20\.github\.io'/);
-  assert.match(main, /!target\.pathname\.startsWith\('\/Brightdesk-Wiki\/'\)/);
+  assert.match(main, /target\.origin !== 'https:\/\/help\.brightdesk\.com'/);
+  assert.match(main, /!allowedBrightdeskHelpPaths\.has\(target\.pathname\)/);
+  assert.match(main, /target\.search \|\| target\.hash/);
   assert.deepEqual(main.match(/shell\.openExternal\s*\([^)]*\)/g) || [], ['shell.openExternal(target.href)']);
   assert.match(main, /setWindowOpenHandler\(\(\{ url \}\) => \{ openBrightdeskHelp\(url\); return \{ action: 'deny' \}; \}\)/);
 });

@@ -27,10 +27,12 @@ if (selectedProductId && !supportedProducts.has(selectedProductId)) {
 }
 
 function sendUpdateState(state) { if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send('updates:state', state); }
+const allowedBrightdeskHelpPaths = new Set(['/products/workspace.html']);
+
 function openBrightdeskHelp(url) {
   try {
     const target = new URL(url);
-    if (target.origin !== 'https://conz20.github.io' || !target.pathname.startsWith('/Brightdesk-Wiki/')) return;
+    if (target.origin !== 'https://help.brightdesk.com' || target.search || target.hash || !allowedBrightdeskHelpPaths.has(target.pathname)) return;
     void shell.openExternal(target.href).catch(() => {});
   } catch {}
 }
