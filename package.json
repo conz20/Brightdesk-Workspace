@@ -104,7 +104,15 @@
         "zip"
       ],
       "category": "public.app-category.productivity",
-      "artifactName": "Brightdesk-Workspace-${version}-${arch}.${ext}"
+      "artifactName": "Brightdesk-Workspace-${version}-${arch}.${ext}",
+      "extendInfo": {
+        "NSBonjourServices": [
+          "_ipp._tcp",
+          "_ipps._tcp",
+          "_printer._tcp"
+        ],
+        "NSLocalNetworkUsageDescription": "Brightdesk Workspace uses your local network to discover printers you choose to use."
+      }
     },
     "dmg": {
       "sign": false
@@ -127,7 +135,9 @@
       "installLocation": "/Applications"
     },
     "asarUnpack": [
-      "native/brightdesk_engine.node"
+      "native/brightdesk_engine.node",
+      "src/printing-package/native/macos/brightdesk-ipp-discovery",
+      "src/printing-package/native/windows/brightdesk-ipp-discovery.exe"
     ]
   },
   "brightdeskAppId": "loop"
