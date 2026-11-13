@@ -1030,7 +1030,7 @@ async function pairNetworkPrinter(printer, actionButton) {
     const result = await window.brightdesk.printing.pairNetworkPrinter(printer);
     if (result?.status === 'cancelled') { $('network-printer-status').textContent = t('printing.pairCancelled'); return; }
     if (result?.refreshRequired) {
-      await window.brightdesk.printing.listPrinters();
+      await refreshConfiguredPrinters();
       $('network-printer-status').textContent = result.status === 'already-paired' ? t('printing.alreadyPaired') : t('printing.paired');
     } else $('network-printer-status').textContent = t('printing.pairFailed');
   } catch (error) { $('network-printer-status').textContent = error?.message || t('printing.pairFailed'); }
