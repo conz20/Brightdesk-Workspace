@@ -4,6 +4,14 @@ import fs from "node:fs";
 import path from "node:path";
 const read=file=>fs.readFileSync(path.join(process.cwd(),file),"utf8");
 
+test("configured-printer refresh returns queues to the print action and preserves errors", () => {
+  const app = read("src/app.js");
+  assert.ok(app.includes("async function refreshConfiguredPrinters({ throwOnError = false } = {})"));
+  assert.ok(app.includes("return availablePrinters;"));
+  assert.ok(app.includes("if (throwOnError) throw error;"));
+  assert.ok(app.includes("refreshConfiguredPrinters({ throwOnError: true })"));
+});
+
 test("Workspace vendors the canonical dependency-free Printing package",()=>{
  const pkg=JSON.parse(read("src/printing-package/package.json")),up=JSON.parse(read("src/printing-package/UPSTREAM.json"));
  assert.equal(pkg.name,"@brightdesk/printing");assert.equal(pkg.version,"0.1.0");assert.deepEqual(pkg.dependencies||{},{});
