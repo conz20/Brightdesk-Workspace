@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, dialog, shell } = require('electron');
 const packageConfig = require('../package.json');
 const { PRODUCT_SLUGS } = require('./desktop-downloads');
 const nativeEngine = require('./rust-engine');
@@ -8,6 +8,7 @@ const fs = require('node:fs/promises');
 const { openOfficeFile, exportOfficeFile, cleanFileName, ensureExtension } = require('./file-service');
 const { BUILTIN_LANGUAGES, validateLanguagePack, getBuiltinLanguage } = require('./language-service');
 const { DictionaryService } = require('./dictionary-service');
+const { registerPrintingIpcHandlers } = require('./printing-ipc.cjs');
 let mainWindow;
 let agreementWindow;
 let termsAccepted = false;
@@ -40,6 +41,18 @@ function createWindow() {
   mainWindow.on('focus', () => { if (autoUpdater) checkForUpdates({ quiet: true }); });
 }
 function senderIsMain(event) { return mainWindow && event.sender === mainWindow.webContents; }
+
+const printingAdapters = new WeakMap();
+async function getPrintingAdapter(webContents) {
+  let pending = printingAdapters.get(webContents);
+  if (!pending) {
+    pending = import('./printing-package/index.mjs').then(({ createElectronPrintAdapter }) =>
+      createElectronPrintAdapter(webContents, { platform: process.platform, shell }));
+    printingAdapters.set(webContents, pending);
+  }
+  return pending;
+}
+registerPrintingIpcHandlers(ipcMain, { isAuthorizedSender: senderIsMain, getAdapter: getPrintingAdapter });
 ipcMain.handle('native:engine-info', event => {
   if (!senderIsMain(event)) throw new Error('Unauthorized native engine request.');
   return nativeEngine.engineInfo();
