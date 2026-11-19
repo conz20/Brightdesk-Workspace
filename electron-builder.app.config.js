@@ -41,7 +41,11 @@ module.exports = {
   extraMetadata: { brightdeskAppId: appId, productName: 'Brightdesk ' + appName },
   asar: true,
   files: ['src/**/*', 'native/brightdesk_engine.node', 'package.json', 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'TERMS_AND_CONDITIONS.txt'],
-  asarUnpack: ['native/brightdesk_engine.node'],
+  asarUnpack: [
+    'native/brightdesk_engine.node',
+    'src/printing-package/native/macos/brightdesk-ipp-discovery',
+    'src/printing-package/native/windows/brightdesk-ipp-discovery.exe'
+  ],
   directories: { output: path.join('release', 'apps', appId) },
   publish: [],
   win: {
@@ -58,7 +62,11 @@ module.exports = {
   mac: {
     target: ['dmg', 'pkg', 'zip'],
     category: 'public.app-category.productivity',
-    artifactName: 'Brightdesk-' + appSlug + '-${version}-${arch}.${ext}'
+    artifactName: 'Brightdesk-' + appSlug + '-${version}-${arch}.${ext}',
+    extendInfo: {
+      NSBonjourServices: ['_ipp._tcp', '_ipps._tcp', '_printer._tcp'],
+      NSLocalNetworkUsageDescription: 'Brightdesk uses your local network to discover printers you choose to use.'
+    }
   },
   pkg: {
     license: 'TERMS_AND_CONDITIONS.txt',
