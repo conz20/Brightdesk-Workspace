@@ -21,6 +21,10 @@ This repository contains the desktop source for Brightdesk Workspace. Electron h
 - [Interface integration tests](tests/workspace-ui-integration.test.js)
 - [Shared Brightdesk Suite](https://github.com/connormolloy12/Brightdesk-suite)
 
+## Engineering and release standard
+
+This product follows the shared requirements for testing, languages, Rust integration, cross-platform installers, data preservation, customer-controlled updates and ongoing maintenance. See the [engineering and release standard](docs/ENGINEERING_AND_RELEASE_STANDARD.md).
+
 ## Shared Brightdesk design standard
 
 The product follows the [Brightdesk visual and interaction standard](https://github.com/connormolloy12/Brightdesk-suite/blob/main/docs/BRIGHTDESK_VISUAL_STANDARD.md) for branding, icon usage, layout, responsive behaviour and accessibility.
