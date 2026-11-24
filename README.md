@@ -27,6 +27,12 @@ The product follows the [Brightdesk visual and interaction standard](https://git
 
 
 
+### Offline font availability
+
+Brightdesk Workspace bundles the Inter 4.1 variable font locally for offline use. Both normal and italic faces are included, with the actual weight range (100–900) and optical-size axis (14–32). The original family name, Inter, is preserved. The complete SIL Open Font License 1.1 notice is included at `src/licenses/fonts/inter-OFL.txt`.
+
+Inter is the first family being integrated; the broader shared font library is still in progress in [Brightdesk-Fonts](https://github.com/conz20/Brightdesk-Fonts). Proprietary Microsoft font files are not bundled. No font is downloaded from the internet at runtime.
+
 ### Live interaction motion
 
 The shared motion stylesheet now animates the entry of the document and product workspaces, the Get apps and Languages views, and native disclosure-panel content. Product buttons use the shared timing and easing scale while preserving the existing horizontal navigation hover treatment. Update checks and downloads show a decorative loading spinner beside the live status text; presentation mode uses the shared open/close overlay and closes immediately when reduced motion is requested.
