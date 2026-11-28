@@ -15,7 +15,7 @@ The workflow expects these two repository-level settings in **Brightdesk-Pages**
 - **Actions variable:** `BRIGHTDESK_APP_ID` — the numeric App ID for the dedicated Brightdesk read-only GitHub App.
 - **Actions secret:** `BRIGHTDESK_APP_PRIVATE_KEY` — the private key PEM for that same GitHub App.
 
-Before adding them, confirm the GitHub App is installed for the `connormolloy12` account and can access these ten private repositories:
+Before adding them, confirm the GitHub App is installed for the `conz20` account and can access these ten private repositories:
 
 - Brightdesk-suite
 - Brightdesk-Sheets
@@ -34,7 +34,7 @@ The App must have **Contents: Read-only** permission for those repositories. Do 
 
 To configure the repository settings:
 
-1. Open [Brightdesk-Pages Actions secrets and variables](https://github.com/connormolloy12/Brightdesk-Pages/settings/secrets/actions).
+1. Open [Brightdesk-Pages Actions secrets and variables](https://github.com/conz20/Brightdesk-Pages/settings/secrets/actions).
 2. Under **Variables**, create `BRIGHTDESK_APP_ID` and enter the App ID.
 3. Under **Secrets**, create `BRIGHTDESK_APP_PRIVATE_KEY` and paste the PEM private key for that App.
 4. Save both settings. Do not paste the private key into chat, workflow files, commits, or issue comments.
@@ -45,7 +45,7 @@ The workflow creates a short-lived installation token for only the repository be
 
 When Brightdesk-suite tests fail, the runner creates a small summary containing sanitised failing test names only. It does not include assertion messages, source paths, stack traces, raw logs or source code.
 
-To post that summary to the private [Brightdesk-suite issue #27](https://github.com/connormolloy12/Brightdesk-suite/issues/27), the dedicated GitHub App also needs the repository permission **Issues: Read and write**. The workflow requests this through a separate short-lived installation token restricted to the `Brightdesk-suite` repository and used only by the issue-comment step. The app-level Issues permission is available to the repositories selected for that GitHub App installation, but this workflow requests the Issues token for Brightdesk-suite only. The normal checkout token remains **Contents: Read-only**. No **Contents: Write**, Actions, Administration, Secrets or signing permission is required.
+To post that summary to the private [Brightdesk-suite issue #27](https://github.com/conz20/Brightdesk-suite/issues/27), the dedicated GitHub App also needs the repository permission **Issues: Read and write**. The workflow requests this through a separate short-lived installation token restricted to the `Brightdesk-suite` repository and used only by the issue-comment step. The app-level Issues permission is available to the repositories selected for that GitHub App installation, but this workflow requests the Issues token for Brightdesk-suite only. The normal checkout token remains **Contents: Read-only**. No **Contents: Write**, Actions, Administration, Secrets or signing permission is required.
 
 To approve the additional permission:
 
@@ -60,7 +60,7 @@ If these two settings are already present and the App installation has the requi
 
 ## Run the checks
 
-1. Open [Brightdesk-Pages Actions](https://github.com/connormolloy12/Brightdesk-Pages/actions/workflows/brightdesk-private-maintenance.yml).
+1. Open [Brightdesk-Pages Actions](https://github.com/conz20/Brightdesk-Pages/actions/workflows/brightdesk-private-maintenance.yml).
 2. Select **Run workflow**.
 3. Leave **Build and verify all private project installers on Windows, macOS and Linux** unchecked for the ordinary daily test run.
 4. Start the workflow and inspect the ten private-project test jobs.
