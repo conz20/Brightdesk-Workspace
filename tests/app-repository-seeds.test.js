@@ -49,7 +49,7 @@ test('app repository seed exports a locked single-app package with suite source 
       assert.ok(fs.statSync(path.join(destination, 'assets', 'brightdesk-app.svg')).size > 0);
       assert.ok(fs.statSync(path.join(destination, 'assets', 'social-preview.svg')).size > 0);
       assert.ok(readme.includes('assets/social-preview.svg'));
-      assert.match(workflow, /node-version: 24\.22\.2/);
+      assert.match(workflow, /node-version: 24\.22\.3/);
       assert.match(workflow, /npm run dist:app:\$\{\{ matrix\.platform \}\}/);
       assert.match(workflow, /npm run verify:app:\$\{\{ matrix\.platform \}\}/);
       assert.ok(fs.existsSync(path.join(destination, 'src', 'app.js')));
