@@ -31,7 +31,7 @@ function createDesktopDownload({ productId, platform, version }) {
   const filename = platform === 'linux'
     ? `brightdesk-${slug.toLowerCase()}-${version}-${target.arch}.${target.extension}`
     : `Brightdesk-${slug}-${version}-${target.arch}.${target.extension}`;
-  const url = `https://github.com/connormolloy12/Brightdesk-suite/releases/latest/download/${encodeURIComponent(filename)}`;
+  const url = `https://github.com/conz20/Brightdesk-suite/releases/latest/download/${encodeURIComponent(filename)}`;
   return { productId, platform, version, filename, url };
 }
 
