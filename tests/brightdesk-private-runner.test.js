@@ -44,7 +44,7 @@ test('private project jobs install the pinned Rust toolchain only for Rust-enabl
   const source = fs.readFileSync(workflow, 'utf8');
   assert.equal(source.split("dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8").length - 1, 3);
   assert.equal(source.split("hashFiles('source/rust/Cargo.toml') != ''").length - 1, 3);
-  assert.equal(source.split("toolchain: 1.99.1").length - 1, 3);
+  assert.equal(source.split("toolchain: 1.100.1").length - 1, 3);
   assert.equal((source.match(/components: rustfmt, clippy/g) || []).length, 3);
 });
 
