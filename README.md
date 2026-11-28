@@ -23,7 +23,24 @@ This repository contains the desktop source for Brightdesk Workspace. Electron h
 
 ## Shared Brightdesk design standard
 
-The product follows the [Brightdesk visual and interaction standard](https://github.com/connormolloy12/Brightdesk-suite/blob/main/docs/BRIGHTDESK_VISUAL_STANDARD.md) for branding, icon usage, layout, responsive behaviour and accessibility.
+Follow the local [approved design brief](docs/BRIGHTDESK_DESIGN.md) and canonical [Brightdesk visual standard](https://github.com/connormolloy12/Brightdesk-suite/blob/main/docs/BRIGHTDESK_VISUAL_STANDARD.md). The approved Workspace accent is `#4B68A8`; preserve the shared navy/light shell and this product's original SVG identity.
+
+
+## Cross-platform desktop packages
+
+The approved cross-platform target is one Brightdesk interface and product scope on Windows, macOS and Linux. Each product must retain its approved icon and accent across those systems. Only operating-system integrations such as window chrome, native dialogs, keyboard conventions, permissions and packaging may vary.
+
+| Platform | Configured package target |
+| --- | --- |
+| Windows | x64 NSIS installer (.exe) |
+| macOS | Universal disk image (.dmg), package installer (.pkg) and archive (.zip) |
+| Linux | x64 AppImage (.AppImage) and Debian package (.deb) |
+
+These are configured build targets, not confirmation that installers are published or have passed native verification. Build and verify each package on its target operating system before describing it as available. Release checks must cover installation, first launch, upgrade, launch after upgrade and removal. Removing Brightdesk must not silently delete local project data.
+
+The customer-facing release version and release approval are managed centrally by Brightdesk Office Suite. Publishing remains a separate manual action.
+
+Build packages on their matching operating system with `npm run dist:win`, `npm run dist:mac` or `npm run dist:linux`. Verify the matching package with `npm run verify:desktop:win`, `npm run verify:desktop:mac` or `npm run verify:desktop:linux`.
 
 
 
