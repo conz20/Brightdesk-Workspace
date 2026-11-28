@@ -71,7 +71,7 @@ test('exact Node.js 24.22.3 runtime is required for release preflight', () => {
   const root = path.resolve(__dirname, '..');
   const result = runPreflight({ rootDir: root, nodeVersion: '24.22.1', platform: 'linux' });
   assert.equal(result.ready, false);
-  assert.ok(result.blockers.some(item => item.name === 'Node.js version' && /24\.22\.2/.test(item.detail)));
+  assert.ok(result.blockers.some(item => item.name === 'Node.js version' && /24\.22\.3/.test(item.detail)));
 });
 
 test('lockfile verifier rejects a missing or mismatched lockfile', () => {
