@@ -31,7 +31,7 @@ test('each Brightdesk product resolves to its release installer on Windows, macO
     for (const [platform, filename] of cases) {
       const result = createDesktopDownload({ productId, platform, version: '0.1.0' });
       assert.equal(result.filename, filename, `${productId} on ${platform}`);
-      assert.equal(result.url, `https://github.com/connormolloy12/Brightdesk-suite/releases/latest/download/${encodeURIComponent(filename)}`);
+      assert.equal(result.url, `https://github.com/conz20/Brightdesk-suite/releases/latest/download/${encodeURIComponent(filename)}`);
     }
   }
 });

@@ -100,7 +100,7 @@ test('daily private project checkouts use each repository default branch', { ski
   const source = fs.readFileSync(workflow, 'utf8');
   const dailyJob = source.split('  daily-private-tests:')[1]?.split('  weekly-private-installer-builds:')[0] ?? '';
   const checkout = dailyJob.split('      - name: Check out the private Brightdesk project')[1]?.split('      - name: Set up the required Node.js runtime')[0] ?? '';
-  assert.ok(checkout.includes('repository: connormolloy12/${{ matrix.project }}'));
+  assert.ok(checkout.includes('repository: conz20/${{ matrix.project }}'));
   assert.doesNotMatch(checkout, /^\s*ref:/m);
   assert.doesNotMatch(dailyJob, /fix\/suite-diagnostic-tests/);
 });
@@ -128,7 +128,7 @@ test('Brightdesk-AI validation follows current main and records the exact tested
     'brightdesk-ai-test-coverage-validation.yml'
   ]) {
     const source = fs.readFileSync(path.join(__dirname, '..', '.github', 'workflows', name), 'utf8');
-    assert.match(source, /repository: connormolloy12\/Brightdesk-AI/);
+    assert.match(source, /repository: conz20\/Brightdesk-AI/);
     assert.match(source, /ref: main/);
     assert.doesNotMatch(source, /ref: [a-f0-9]{40}/);
     assert.match(source, /git -C private-ai rev-parse HEAD/);
@@ -199,7 +199,7 @@ test('one-time Suite installer request starts only Suite platform builds', { ski
   assert.match(oneTimeJob, /github\.event_name == 'push'/);
   assert.match(oneTimeJob, /github\.event\.head_commit\.message/);
   assert.match(oneTimeJob, /\[build-brightdesk-suite-installers\]/);
-  assert.ok(oneTimeJob.includes('repository: connormolloy12/Brightdesk-suite'));
+  assert.ok(oneTimeJob.includes('repository: conz20/Brightdesk-suite'));
   assert.match(oneTimeJob, /ref: main/);
   for (const platform of ['win', 'mac', 'linux']) assert.ok(oneTimeJob.includes('platform: ' + platform));
   assert.doesNotMatch(weeklyJob, /github\.event_name == 'push'/);
