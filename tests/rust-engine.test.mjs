@@ -79,7 +79,7 @@ const rustWorkflowSource = readFileSync(
 test("product quality workflow builds Rust before requiring the native engine in tests", () => {
   assert.ok(rustWorkflowSource.includes("actions/checkout@v4"));
   assert.ok(rustWorkflowSource.includes("actions/setup-node@v4"));
-  assert.ok(rustWorkflowSource.includes("toolchain: 1.100.1"));
+  assert.ok(rustWorkflowSource.includes("toolchain: 1.100.0"));
   assert.ok(rustWorkflowSource.includes("npm run rust:check"));
   assert.ok(rustWorkflowSource.includes('BRIGHTDESK_REQUIRE_NATIVE_ENGINE: "1"'));
   assert.ok(rustWorkflowSource.includes("run: npm test"));
