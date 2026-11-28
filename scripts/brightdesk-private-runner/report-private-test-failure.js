@@ -3,7 +3,7 @@
 const fs = require('node:fs');
 
 const MARKER = '<!-- brightdesk-private-test-diagnostic -->';
-const REPOSITORY = 'connormolloy12/Brightdesk-suite';
+const REPOSITORY = 'conz20/Brightdesk-suite';
 const ISSUE_NUMBER = 27;
 
 function readPrivateFailureSummary(filePath, fsImpl = fs) {
