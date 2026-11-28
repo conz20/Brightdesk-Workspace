@@ -142,7 +142,7 @@ The latest standalone installers are published from this repository's verified r
 | macOS | Universal installer (.dmg), package (.pkg) and archive (.zip) |
 | Linux | x64 AppImage and Debian package (.deb) |
 
-The complete ten-app desktop suite remains available from [Brightdesk-suite](https://github.com/connormolloy12/Brightdesk-suite).
+The complete ten-app desktop suite remains available from [Brightdesk-suite](https://github.com/conz20/Brightdesk-suite).
 
 ## Run from source
 
@@ -171,7 +171,7 @@ Use \`win\` on Windows or \`linux\` on Linux instead of \`mac\`.
 
 ## Related project
 
-[Brightdesk Office Suite](https://github.com/connormolloy12/Brightdesk-suite) brings all ten approved Brightdesk apps together in one desktop installer.
+[Brightdesk Office Suite](https://github.com/conz20/Brightdesk-suite) brings all ten approved Brightdesk apps together in one desktop installer.
 
 ## Identity and licence
 
@@ -351,7 +351,7 @@ function createAppRepositorySeeds({ rootDir = path.resolve(__dirname, '..'), out
 - App ID: \`${app.appId}\`
 - Repository visibility: choose when creating the GitHub repository
 - Description: ${app.description}
-- Main suite: https://github.com/connormolloy12/Brightdesk-suite
+- Main suite: https://github.com/conz20/Brightdesk-suite
 
 This seed is ready to push to a GitHub repository named \`${app.repository}\`. It is a standalone edition locked to ${app.name}. The shared suite keeps the complete ten-app experience.
 `);
