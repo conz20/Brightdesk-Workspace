@@ -17,14 +17,14 @@ concurrency:
 jobs:
   quality:
     name: App tests and Rust engine checks
-    runs-on: [self-hosted, macOS, ARM64, brightdesk-product-ci]
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Node.js 24.22.2
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24.22.2
 
@@ -35,7 +35,7 @@ jobs:
           components: rustfmt, clippy
 
       - name: Cache Rust build
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@98c8021b550208e191a6a3145459bfc1fb29c4c0 # v2
         with:
           workspaces: |
             rust -> rust/target
