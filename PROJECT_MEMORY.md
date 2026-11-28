@@ -1,7 +1,7 @@
 # Brightdesk Workspace project notes
 
 ## Runtime
-Use exactly Node.js **24.22.2 LTS** for development, testing and desktop installer builds. Keep the runtime aligned across package.json, package-lock.json, .node-version, .nvmrc, .npmrc, the development container and CI.
+Use exactly Node.js **24.22.3 LTS** for development, testing and desktop installer builds. Keep the runtime aligned across package.json, package-lock.json, .node-version, .nvmrc, .npmrc, the development container and CI.
 
 ## Product identity
 This repository builds **Brightdesk Workspace** only. Use this exact name in customer-facing text, desktop installer names, release titles and documentation. The product opens directly into its own workspace; product switching is disabled.
