@@ -85,7 +85,7 @@ if [[ ! -f "$PROJECT_DIR/package.json" || ! -f "$PROJECT_DIR/package-lock.json" 
   fail_check 2
 fi
 
-if ! node -e "const p=require(process.argv[1]); if (p.engines?.node !== '24.22.2') process.exit(1)" "$PROJECT_DIR/package.json"; then
+if ! node -e "const p=require(process.argv[1]); if (p.engines?.node !== '24.22.3') process.exit(1)" "$PROJECT_DIR/package.json"; then
   STAGE="required Node.js version"
   fail_check 2
 fi

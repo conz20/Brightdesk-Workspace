@@ -6,7 +6,7 @@ The wider Brightdesk Office Suite contains the approved product range: Pages, Sh
 
 ## Build and verification
 
-Use Node.js 24.22.2. Build on the operating system for which the installer is intended:
+Use Node.js 24.22.3. Build on the operating system for which the installer is intended:
 
 - Windows: `npm run dist:desktop:win`
 - macOS: `npm run dist:desktop:mac`

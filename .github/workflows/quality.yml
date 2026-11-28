@@ -17,21 +17,21 @@ concurrency:
 jobs:
   quality:
     name: App tests and Rust engine checks
-    runs-on: [self-hosted, macOS, ARM64, brightdesk-product-ci]
+    runs-on: macos-latest
     timeout-minutes: 30
     steps:
       - name: Check out source
         uses: actions/checkout@v4
 
-      - name: Set up Node.js 24.22.2
+      - name: Set up Node.js 24.22.3
         uses: actions/setup-node@v4
         with:
-          node-version: 24.22.2
+          node-version: 24.22.3
 
       - name: Set up the pinned Rust toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: 1.99.1
+          toolchain: 1.100.1
           components: rustfmt, clippy
 
       - name: Cache Rust build

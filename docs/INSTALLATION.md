@@ -6,7 +6,7 @@
 
 The Brightdesk Pages desktop installer includes the runtime it needs. Install Brightdesk Pages using the installer for your computer, then open it normally.
 
-Node.js 24.22.2 is used by the Brightdesk development and automated build systems to prepare and test the installers. It is not a separate customer installation requirement.
+Node.js 24.22.3 is used by the Brightdesk development and automated build systems to prepare and test the installers. It is not a separate customer installation requirement.
 
 ## Choose the installer for your computer
 
