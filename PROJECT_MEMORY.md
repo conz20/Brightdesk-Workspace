@@ -1,7 +1,11 @@
 # Brightdesk Workspace project notes
 
-## Runtime
-Use exactly Node.js **24.22.2 LTS** for development, testing and desktop installer builds. Keep the runtime aligned across package.json, package-lock.json, .node-version, .nvmrc, .npmrc, the development container and CI.
+## Runtime and compatibility
+
+Latest-stable-first is the standing project requirement. Before each planned runtime, framework, toolchain or dependency update, check the official upstream release source, current security advisories and support status. Select the newest stable version that passes this product's compatibility checks.
+
+The current tested local Node.js pin remains 24.22.2 LTS until a newer candidate passes. Node.js 24.22.3 is the security-patch candidate; Node.js 26.13.1 is a separate major-runtime compatibility trial. Keep exact tested pins and evidence in the shared Brightdesk Suite Version Compatibility Standard. If one candidate fails, revert only that component, record the evidence and retry condition, and continue unrelated updates.
+
 
 ## Product identity
 This repository builds **Brightdesk Workspace** only. Use this exact name in customer-facing text, desktop installer names, release titles and documentation. The product opens directly into its own workspace; product switching is disabled.
