@@ -8,15 +8,18 @@ The complete Brightdesk customer portfolio contains exactly these ten products: 
 
 Do not add Outlook, OneDrive, Teams or any other unapproved product. This repository must not silently take on another product's identity or runtime.
 
-## Approved runtime and compatibility
+## Runtime and version compatibility
 
-Use exactly Node.js **24.22.2 LTS** for development, tests, scripts, builds and CI. Keep package manifests, lockfiles, `.node-version`, `.nvmrc`, `.npmrc`, development containers and GitHub Actions aligned.
+Before each planned runtime, framework, toolchain or dependency update, check the official upstream release source, current security advisories and support status. Prefer the newest stable version that passes this product's compatibility checks.
 
-Where this repository packages Electron, pin Electron **45.2.1** and electron-builder **26.18.0** exactly. Where it builds or tests Rust crates or native bindings, pin Rust **1.99.1** in the repository's toolchain configuration and CI. Do not add Electron, electron-builder or Rust where they do not apply.
+Keep the exact tested pins, candidate evidence and compatibility exceptions in the shared Brightdesk Suite Version Compatibility Standard. Do not treat a previously pinned version as a permanent ceiling or duplicate stale fixed pins in contributor instructions. Keep manifests, lockfiles, runtime selectors, development containers, build scripts, installer settings and CI aligned with the selected version.
 
-Do not copy older-version code, tutorials, samples or API guidance into the current implementation unchanged. Check the version they target and port useful work to the approved APIs. Update imports, method signatures, configuration, lockfiles, tests and documentation together. Never mix incompatible major-version APIs or use an older runtime to force a test to pass.
+A newer major runtime is a separate compatibility candidate. Do not silently replace a working major version merely because a newer major release exists. Do not add Electron, electron-builder or Rust where they do not apply.
 
-Do not change the approved versions without explicit owner approval and a coordinated compatibility review. Do not automatically upgrade to whatever upstream calls latest.
+Do not copy older-version code, tutorials, samples or API guidance into the current implementation unchanged. Check the version they target and port useful work to the selected APIs. Update imports, method signatures, configuration, lockfiles, tests and documentation together. Never mix incompatible major-version APIs or use an older runtime to force a test to pass.
+
+If a candidate is incompatible or causes a regression, revert only that component to its previous stable compatible version, document the reproducible evidence and retry condition, and continue unrelated updates. Do not globally downgrade or stop the portfolio because one component fails.
+
 
 ## Customer, privacy and service boundaries
 
