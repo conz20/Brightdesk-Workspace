@@ -35,7 +35,7 @@ Brightdesk-AI remains a private control plane and is not bundled into customer a
 - Ordinary `npm start` and `npm test` remain available without a compiled addon and use the bounded JavaScript fallback when native loading is unavailable.
 - Windows and Linux build the native addon for the runner architecture. macOS builds both `aarch64-apple-darwin` and `x86_64-apple-darwin` libraries and combines them into a universal module for the universal desktop installer.
 
-The Rust toolchain is pinned to 1.100.1. Cross-platform CI targets Linux, Windows, and macOS. GitHub has not assigned runners to the current jobs yet, so compilation and test results remain unverified until those workflows actually execute.
+The Rust toolchain is pinned to 1.100.0. Cross-platform CI targets Linux, Windows, and macOS. GitHub has not assigned runners to the current jobs yet, so compilation and test results remain unverified until those workflows actually execute.
 
 ## Runtime fallback
 
