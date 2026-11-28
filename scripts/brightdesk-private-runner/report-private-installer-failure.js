@@ -2,7 +2,7 @@
 
 const fs = require('node:fs');
 
-const REPOSITORY = 'connormolloy12/Brightdesk-suite';
+const REPOSITORY = 'conz20/Brightdesk-suite';
 const ISSUE_NUMBER = 27;
 const PLATFORMS = new Set(['win', 'mac', 'linux']);
 
