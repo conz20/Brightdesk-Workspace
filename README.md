@@ -76,6 +76,20 @@ See [docs/DESIGN_BRIEF.md](docs/DESIGN_BRIEF.md) for the screen designs, navigat
 
 [Brightdesk Office Suite](https://github.com/connormolloy12/Brightdesk-suite)
 
+## Printing
+
+Microsoft workflow comparison and known gaps: [Brightdesk Printing Compatibility Matrix](https://github.com/conz20/Brightdesk-suite/blob/feat/printing-suite-integration-2026-11-13/docs/PRINTING-COMPATIBILITY.md).
+
+Brightdesk Workspace uses the shared, dependency-free Brightdesk Printing adapter. Print checks configured operating-system printer queues and opens the visible print dialog; Printer settings opens the OS setup screen.
+
+- **macOS:** builds a universal Bonjour/IPP discovery helper for Apple Silicon and Intel, with Bonjour and local-network Info.plist metadata.
+- **Windows:** builds the IPP/WSD discovery helper using Visual Studio C++ Build Tools and the Windows SDK.
+- **Linux:** uses configured queues via Electron and the host CUPS `ippfind` utility for network discovery.
+
+Native helpers are built after the Rust engine and unpacked outside ASAR alongside it. Brightdesk does not silently create queues, pair devices, install drivers or upload documents. Submission acceptance is not proof of physical printing; virtual-printer tests do not replace real-printer checks.
+
+**Customer-facing UI boundary:** the renderer currently connects only queue listing, Print and Printer settings. Network discovery, user-approved WSD pairing and capability lookup are exposed through protected IPC/preload APIs but are not wired to a customer-facing screen. Users must add the printer through operating-system settings before it becomes a usable queue. The Windows WSD regression test also checks that a previously selected opaque printer ID remains pairable after a subsequent discovery refresh.
+
 ## Documentation freshness
 
 The root README is maintained alongside the product, not as an end-of-project task. Every pull request that changes application code, tests, UI, design assets, screenshots, icons, configuration, dependencies, packaging, or build/release workflows must also update this README in the same pull request. Keep feature status, screenshots and visual references, application icons, setup/build instructions, platform compatibility, and repository links aligned with the latest verified implementation. Describe planned or untested functionality as planned, never as completed. The **README freshness** GitHub Actions check requires a root `README.md` update whenever a pull request or direct push to `main` changes a non-Markdown file; a passing check confirms inclusion, while reviewers remain responsible for checking factual accuracy and current visuals.
@@ -101,13 +115,6 @@ The product build configuration defines desktop packages for all three supported
 The private installer smoke-test scripts are shared verification tooling. Their regression tests check that a test run uses product-specific names and unique temporary locations, refuses to overwrite an existing macOS installation or package receipt, and does not remove a pre-existing Linux package. These source and regression checks are not proof that a native installer has been executed on each operating system.
 
 A platform is complete only after the matching current-version artifacts and SHA-256 records are verified, followed by actual install, first launch, upgrade, repair, uninstall and user-data-preservation checks on that platform. Wine compatibility checks must not be described as native Windows certification. No unverified platform is described as release-ready.
-
-
-## Shared offline JSON storage
-
-This product bundles the Brightdesk Common-Libs JSON storage helper locally at `src/vendor/brightdesk-common-libs/json-storage.js`. Existing `brightdesk-docs-v3` and `brightdesk-app-setup-v1` storage keys are retained, and the older `brightdesk-docs-v2` key remains readable as a fallback without being deleted. Exact upstream source provenance is recorded in `src/vendor/brightdesk-common-libs/UPSTREAM.json`.
-
-The helper loads from the installed product before `src/app.js`. It does not download from GitHub, a package registry or another network service at runtime. Normal local documents and settings continue to work offline.
 
 ## Application identity
 
